@@ -22,7 +22,7 @@ def home():
 
 @app.route('/pet', methods=['GET', 'POST'])
 def pet():
-    cnx = mysql.connector.connect(user='root', password='Baseball32', host='127.0.0.1', database='VetClinic', use_pure=True)
+    cnx = mysql.connector.connect(user='root', password='MySQLPassword', host='127.0.0.1', database='VetClinic', use_pure=True)
     cursor = cnx.cursor()
     if request.method == "POST":
         #HomePage=request.form['home']
@@ -46,18 +46,19 @@ def pet():
         petResultsQuery = get_petResults_query(ownerLast, ownerFirst, petID, petName, petDOB)
         print("pet Results Query: " + petResultsQuery)
 
+        iter = cursor.execute(petResultsQuery, multi=True)
         cnx.commit()
         rows = []
-        for result in cursor.execute(petResultsQuery, multi = True) :
-            if result.with_rows:
-                print("Rows produced by statement '{}':".format(result.statement))
-                results = result.fetchall()
-                for r in results:
-                    print(r)
-            else:
-                print("Number of rows affected by statement '{}': {}".format(result.statement, result.rowcount))
+        try:
+            for result in iter:
+                print("result1 " + str(result))
+                for record in result:
+                    print("record " + record)
+                    rows.append(record)
+        except:
+            print("Exception.")
 
-        return redirect(url_for('petResults', rows=results))
+        return redirect(url_for('petResults', rows=str(rows)))
 
     cursor.close()
     cnx.close()
