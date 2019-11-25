@@ -22,7 +22,7 @@ def home():
 
 @app.route('/pet', methods=['GET', 'POST'])
 def pet():
-    cnx = mysql.connector.connect(user='root', password='Baseball32', host='127.0.0.1', database='VetClinic', use_pure=True)
+    cnx = mysql.connector.connect(user='root', password='MySQLPassword', host='127.0.0.1', database='VetClinic', use_pure=True)
     cursor = cnx.cursor()
     if request.method == "POST":
         #HomePage=request.form['home']
@@ -48,14 +48,17 @@ def pet():
 
         cnx.commit()
         rows = []
-        for result in cursor.execute(petResultsQuery, multi = True) :
-            if result.with_rows:
-                print("Rows produced by statement '{}':".format(result.statement))
-                results = result.fetchall()
-                for r in results:
-                    print(r)
-            else:
-                print("Number of rows affected by statement '{}': {}".format(result.statement, result.rowcount))
+        try:
+            for result in cursor.execute(petResultsQuery, multi = True) :
+                if result.with_rows:
+                    print("Rows produced by statement '{}':".format(result.statement))
+                    results = result.fetchall()
+                    for r in results:
+                        print(r)
+                else:
+                    print("Number of rows affected by statement '{}': {}".format(result.statement, result.rowcount))
+        except:
+            print("Exception")
 
         return redirect(url_for('petResults', rows=results))
 
