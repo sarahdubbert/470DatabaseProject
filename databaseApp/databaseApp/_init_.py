@@ -81,9 +81,11 @@ def petResults():
 
 @app.route('/newOwner', methods=['GET', 'POST'])
 def newOwner():
+    cnx = mysql.connector.connect(user='root', password='MySQLPassword', host='127.0.0.1', database='VetClinic', use_pure=True)
+    cursor = cnx.cursor()
     if request.method == "POST":
         #how to generate owner ID?
-        owner_id = 2
+        owner_id = '2'
         first_name=request.form['first_name']
         last_name=request.form['last_name']
         insurance_number=request.form['insurance_number']
@@ -97,7 +99,13 @@ def newOwner():
 
 
         def get_insertOwner_query():
-            return "INSERT INTO Owner (OwnerID, FirstName, LastName, InsuranceNumber, InsuranceCompany, PhoneNumber, Email, PhysicalAddress, SSN, DOB) VALUES ('" + owner_id + "', '" + first_name + "', '" + last_name + "', '" + insurance_number + "', '" + insurance_company + "', '" + phone_number + "', '" + email + "', '" + physical_address + "', '" + ssn + "', '" + owner_dob + "');"
+            return "INSERT INTO Owner (OwnerID, FirstName, LastName, InsuranceNumber, InsuranceCompany, PhoneNumber, Email, PhysicalAddress, SSN, DOB) VALUES ('" + str(owner_id) + "', '" + str(first_name) + "', '" + str(last_name) + "', '" + str(insurance_number) + "', '" + str(insurance_company) + "', '" + str(phone_number) + "', '" + str(email) + "', '" + str(physical_address) + "', '" + str(ssn) + "', '" + str(owner_dob) + "');"
+
+        newOwnerQuery = get_insertOwner_query()
+        cursor.execute(get_insertOwner_query)
+        cnx.commit()
+
+        return redirect(url_for('newPet'))
 
     return render_template('newOwner.html')
 
@@ -107,6 +115,8 @@ def newOwner():
 
 @app.route('/newPet', methods=['GET', 'POST'])
 def newPet():
+    cnx = mysql.connector.connect(user='root', password='MySQLPassword', host='127.0.0.1', database='VetClinic', use_pure=True)
+    cursor = cnx.cursor()
     if request.method == "POST":
         #petID = 
         #how to generate petID?
