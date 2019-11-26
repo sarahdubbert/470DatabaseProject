@@ -4,7 +4,11 @@ import mysql.connector
 app = Flask(__name__)
 
 
-
+#Set db connection variables
+usr = "root"
+pw = "MySQLPassword"
+hst = "127.0.0.1"
+db = "VetClinic"
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
@@ -22,7 +26,7 @@ def home():
 
 @app.route('/pet', methods=['GET', 'POST'])
 def pet():
-    cnx = mysql.connector.connect(user='root', password='MySQLPassword', host='127.0.0.1', database='VetClinic', use_pure=True)
+    cnx = mysql.connector.connect(user=usr, password=pw, host=hst, database=db, use_pure=True)
     cursor = cnx.cursor()
     if request.method == "POST":
         #HomePage=request.form['home']
@@ -78,10 +82,9 @@ def petResults():
         print("Made it to pet results")
     return render_template('petResults.html', rows=request.args.get('rows'))
 
-
 @app.route('/newOwner', methods=['GET', 'POST'])
 def newOwner():
-    cnx = mysql.connector.connect(user='root', password='MySQLPassword', host='127.0.0.1', database='VetClinic', use_pure=True)
+    cnx = mysql.connector.connect(user=usr, password=pw, host=hst, database=db, use_pure=True)
     cursor = cnx.cursor()
     if request.method == "POST":
         #how to generate owner ID?
@@ -109,13 +112,9 @@ def newOwner():
 
     return render_template('newOwner.html')
 
-
-
-
-
 @app.route('/newPet', methods=['GET', 'POST'])
 def newPet():
-    cnx = mysql.connector.connect(user='root', password='MySQLPassword', host='127.0.0.1', database='VetClinic', use_pure=True)
+    cnx = mysql.connector.connect(user=usr, password=pw, host=hst, database=db, use_pure=True)
     cursor = cnx.cursor()
     if request.method == "POST":
         #petID = 
