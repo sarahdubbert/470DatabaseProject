@@ -34,7 +34,6 @@ def pet():
         #VaccinationsPage=request.form['vaccinations']
 
         def get_petResults_query(ownerLast, ownerFirst, petID, petName, petDOB):
-            print("petID" + petID)
             return "SELECT Pet.PetID, Pet.Name, Owner.FirstName, Owner.LastName, Pet.PetType, Pet.DOB, Pet.Weight, Pet.Height, Pet.Sex FROM Pet JOIN Owner ON Pet.OwnerID = Owner.OwnerID WHERE LastName = '" + str(ownerLast) + "' OR FirstName = '" + str(ownerFirst) + "' OR PetID = '" + str(petID) + "' OR Name = '" + str(petName) + "' OR Pet.DOB = '" + str(petDOB) + "';"
 
 
@@ -72,6 +71,52 @@ def petResults():
     if request.method == "POST":
         print("Made it to pet results")
     return render_template('petResults.html', rows=request.args.get('rows'))
+
+
+@app.route('/newOwner', methods=['GET', 'POST'])
+def newOwner():
+    if request.method == "POST":
+        #how to generate owner ID?
+        owner_id = 2
+        first_name=request.form['first_name']
+        last_name=request.form['last_name']
+        insurance_number=request.form['insurance_number']
+        insurance_company=request.form['insurance_company']
+        phone_number=request.form['phone_number']
+        email=request.form['email']
+        physical_address=request.form['physical_address']
+        ssn=request.form['ssn']
+        owner_dob=request.form['owner_dob']
+
+
+
+        def get_insertOwner_query():
+            INSERT INTO Owner (OwnerID, FirstName, LastName, InsuranceNumber, InsuranceCompany, PhoneNumber, Email, PhysicalAddress, SSN, DOB) VALUES ('" + owner_id + "', '" + first_name + "', '" + last_name + "', '" + insurance_number + "', '" + insurance_company + "', '" + phone_number + "', '" + email + "', '" + physical_address + "', '" + ssn + "', '" + owner_dob + "');
+
+
+
+
+
+
+
+@app.route('/newPet', methods=['GET', 'POST'])
+def newPet():
+    if request.method == "POST":
+        #petID = 
+        #how to generate petID?
+        petID = 2
+        pet_name=request.form['pet_name']
+        #owner_id=
+        #how to get FK for ownerId?
+        ownerID = 2
+        pet_type=request.form['pet_type']
+        pet_dob=request.form['pet_dob']
+        weight=request.form['weight']
+        height=request.form['height']
+        sex=request.form['sex']
+
+        def get_insertPet_query(): 
+            return "INSERT INTO Pet (PetID, Name, OwnerID, PetType, DOB, Weight, Height, Sex) VALUES ('" + petID + "', '" + pet_name + "', '" + ownerID + "', '" + pet_type + "', '" + pet_dob + "', '" + weight + "', '" + height + "', '" + sex + "');"
 
 
 @app.route('/owner', methods=['GET', 'POST'])

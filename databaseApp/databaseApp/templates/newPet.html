@@ -8,16 +8,16 @@
   <a href="/vaccinations" class="btn btn-default" name = "vaccinations">Vaccinations</a>
 </div>
 
-<h3>Search for Pet:</h3>
+<h2>New Pet Information</h2>
 
-<div class="petsearch">
-<form action="/pet" method=post>
-    Owner Last Name: <input type=text name=ownerLast></br>
-    Owner First Name: <input type=text name=ownerFirst></br>
-    Pet Name <input type=text name=petName></br>
-    Pet ID <input type=text name=petID></br>
-    Pet DOB <input type=text name=petDOB></br>
+<div class="new_pet">
+<form action="/newPet" method=post>
+    Name: <input type=text name=pet_name></br>
+    Pet Type: <input type=text name=pet_type></br>
+    Date of Birth: <input type=text name=pet_dob></br>
+    Weight: <input type=text name=weight></br>
+    Height: <input type=text name=height></br>
+    Sex: <input type=text name=sex></br>
     <div class="actions"><input type=submit value="Search"></div>
 </form>
 </div>
-

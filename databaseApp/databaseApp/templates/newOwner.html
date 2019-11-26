@@ -8,16 +8,21 @@
   <a href="/vaccinations" class="btn btn-default" name = "vaccinations">Vaccinations</a>
 </div>
 
-<h3>Search for Pet:</h3>
+<h2>New Owner Information</h2>
 
-<div class="petsearch">
-<form action="/pet" method=post>
-    Owner Last Name: <input type=text name=ownerLast></br>
-    Owner First Name: <input type=text name=ownerFirst></br>
-    Pet Name <input type=text name=petName></br>
-    Pet ID <input type=text name=petID></br>
-    Pet DOB <input type=text name=petDOB></br>
+<div class="new_owner">
+<form action="/newOwner" method=post>
+    First Name: <input type=text name=first_name></br>
+    Last Name: <input type=text name=last_name></br>
+    Insurance Number: <input type=text name=insurance_number></br>
+    Phone Number: <input type=text name=insurance_company></br>
+    Email Address: <input type=text name=phone_number></br>
+    Address: <input type=text name=email></br>
+    SSN: <input type=text name=physical_address></br>
+    Date of Birth: <input type=text name=ssn></br>
     <div class="actions"><input type=submit value="Search"></div>
 </form>
 </div>
 
+
+<p>Owner already in the system? Click <a href="/pet" here </a> to find them.</p
