@@ -7,3 +7,20 @@
   <a href="/prescriptions" class="btn btn-default" name = "prescriptions">Prescriptions</a>
   <a href="/vaccinations" class="btn btn-default" name = "vaccinations">Vaccinations</a>
 </div>
+
+<div class="addnew">
+  <form action="/newSurgery" method=post>
+      <div class="actions"><input type=submit value="Add a New Surgery"></div>
+  </form>
+  </div>
+  
+  
+  <h3>Search for Surgery:</h3>
+  
+  <div class="surgerySearch">
+  <form action="/surgeries" method=post>
+      Surgery Name <input type=text name=surgeryName></br>
+      Surgery ID <input type=text name=surgeryID></br>
+      <div class="actions"><input type=submit value="Submit"></div>
+  </form>
+  </div>

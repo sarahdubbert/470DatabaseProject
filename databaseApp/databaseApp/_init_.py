@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 #Set db connection variables
 usr = "root"
-pw = "MySQLPassword"
+pw = "Baseball32"
 hst = "127.0.0.1"
 db = "VetClinic"
 
@@ -82,6 +82,57 @@ def petResults():
         print("Made it to pet results")
     return render_template('petResults.html', rows=request.args.get('rows'))
 
+@app.route('/owner', methods=['GET', 'POST'])
+def owner():
+    cnx = mysql.connector.connect(user=usr, password=pw, host=hst, database=db, use_pure=True)
+    cursor = cnx.cursor()
+    if request.method == "POST":
+        #HomePage=request.form['home']
+        #PetPage=request.form['pet']
+        #OwnerPage=request.form['owner']
+        #IllnessesPage=request.form['illnesses']
+        #SurgeriesPage=request.form['surgeries']
+        #PrescriptionsPage=request.form['prescriptions']
+        #VaccinationsPage=request.form['vaccinations']
+
+        # if(addpet):
+        #     return redirect(url_for('addOwner'))
+
+        def get_ownerResults_query(petID, petName):
+            return "SELECT Pet.PetID, Pet.Name, Owner.OwnerId, Owner.FirstName, Owner.LastName, Owner.InsuranceNumber, Owner.InsuranceCompany, Owner.PhoneNumber, Owner.Email, Owner.PhysicalAddress, Owner.SSN, Owner.DOB FROM Pet JOIN Owner ON Pet.OwnerID = Owner.OwnerID WHERE PetID = '" + str(petID) + "' OR Name = '" + str(petName) + "';"
+
+        petID=request.form['petID']
+        petName=request.form['petName']
+        ownerResultsQuery = get_ownerResults_query(petID, petName)
+        print("Owner Results Query: " + ownerResultsQuery)
+
+        cnx.commit()
+        rows = []
+        try:
+            for result in cursor.execute(ownerResultsQuery, multi = True) :
+                if result.with_rows:
+                    print("Rows produced by statement '{}':".format(result.statement))
+                    results = result.fetchall()
+                    for r in results:
+                        print(r)
+                else:
+                    print("Number of rows affected by statement '{}': {}".format(result.statement, result.rowcount))
+        except:
+            print("Exception")
+
+        return redirect(url_for('ownerResults', rows=results))
+
+    cursor.close()
+    cnx.close()
+
+    return render_template('owner.html')
+
+@app.route('/ownerResults', methods=['GET', 'POST'])
+def ownerResults():
+    if request.method == "POST":
+        print("Made it to owner results")
+    return render_template('ownerResults.html', rows=request.args.get('rows'))
+
 @app.route('/newOwner', methods=['GET', 'POST'])
 def newOwner():
     cnx = mysql.connector.connect(user=usr, password=pw, host=hst, database=db, use_pure=True)
@@ -141,63 +192,206 @@ def newPet():
     
     return render_template('newPet.html')
 
-@app.route('/owner', methods=['GET', 'POST'])
-def owner():
-    if request.method == "POST":
-        HomePage=request.form['home']
-        PetPage=request.form['pet']
-        OwnerPage=request.form['owner']
-        IllnessesPage=request.form['illnesses']
-        SurgeriesPage=request.form['surgeries']
-        PrescriptionsPage=request.form['prescriptions']
-        VaccinationsPage=request.form['vaccinations']
-    return render_template('owner.html')
-
 @app.route('/illnesses', methods=['GET', 'POST'])
 def illnesses():
+    cnx = mysql.connector.connect(user=usr, password=pw, host=hst, database=db, use_pure=True)
+    cursor = cnx.cursor()
     if request.method == "POST":
-        HomePage=request.form['home']
-        PetPage=request.form['pet']
-        OwnerPage=request.form['owner']
-        IllnessesPage=request.form['illnesses']
-        SurgeriesPage=request.form['surgeries']
-        PrescriptionsPage=request.form['prescriptions']
-        VaccinationsPage=request.form['vaccinations']
+        #HomePage=request.form['home']
+        #PetPage=request.form['pet']
+        #OwnerPage=request.form['owner']
+        #IllnessesPage=request.form['illnesses']
+        #SurgeriesPage=request.form['surgeries']
+        #PrescriptionsPage=request.form['prescriptions']
+        #VaccinationsPage=request.form['vaccinations']
+
+        # if(addpet):
+        #     return redirect(url_for('addOwner'))
+
+        def get_illnessResults_query(illnessID, illnessName):
+            return "SELECT IllnessID, IllnessName FROM Illness WHERE IllnessID = '" + str(illnessID) + "' OR IllnessName = '" + str(illnessName) + "';"
+
+        illnessID=request.form['illnessID']
+        illnessName=request.form['illnessName']
+        illnessResultsQuery = get_illnessResults_query(illnessID, illnessName)
+        print("Illness Results Query: " + illnessResultsQuery)
+
+        cnx.commit()
+        rows = []
+        try:
+            for result in cursor.execute(illnessResultsQuery, multi = True) :
+                if result.with_rows:
+                    print("Rows produced by statement '{}':".format(result.statement))
+                    results = result.fetchall()
+                    for r in results:
+                        print(r)
+                else:
+                    print("Number of rows affected by statement '{}': {}".format(result.statement, result.rowcount))
+        except:
+            print("Exception")
+
+        return redirect(url_for('illnessResults', rows=results))
+
+    cursor.close()
+    cnx.close()
+
     return render_template('illnesses.html')
+
+@app.route('/illnessResults', methods=['GET', 'POST'])
+def illnessResults():
+    if request.method == "POST":
+        print("Made it to illness results")
+    return render_template('illnessResults.html', rows=request.args.get('rows'))
 
 @app.route('/surgeries', methods=['GET', 'POST'])
 def surgeries():
+    cnx = mysql.connector.connect(user=usr, password=pw, host=hst, database=db, use_pure=True)
+    cursor = cnx.cursor()
     if request.method == "POST":
-        HomePage=request.form['home']
-        PetPage=request.form['pet']
-        OwnerPage=request.form['owner']
-        IllnessesPage=request.form['illnesses']
-        SurgeriesPage=request.form['surgeries']
-        PrescriptionsPage=request.form['prescriptions']
-        VaccinationsPage=request.form['vaccinations']
+        #HomePage=request.form['home']
+        #PetPage=request.form['pet']
+        #OwnerPage=request.form['owner']
+        #IllnessesPage=request.form['illnesses']
+        #SurgeriesPage=request.form['surgeries']
+        #PrescriptionsPage=request.form['prescriptions']
+        #VaccinationsPage=request.form['vaccinations']
+
+        # if(addpet):
+        #     return redirect(url_for('addOwner'))
+
+        def get_surgeryResults_query(surgeryID, surgeryName):
+            return "SELECT SurgeryID, SurgeryName FROM Surgery WHERE SurgeryID = '" + str(surgeryID) + "' OR SurgeryName = '" + str(surgeryName) + "';"
+
+        surgeryID=request.form['surgeryID']
+        surgeryName=request.form['surgeryName']
+        surgeryResultsQuery = get_surgeryResults_query(surgeryID, surgeryName)
+        print("Surgery Results Query: " + surgeryResultsQuery)
+
+        cnx.commit()
+        rows = []
+        try:
+            for result in cursor.execute(surgeryResultsQuery, multi = True) :
+                if result.with_rows:
+                    print("Rows produced by statement '{}':".format(result.statement))
+                    results = result.fetchall()
+                    for r in results:
+                        print(r)
+                else:
+                    print("Number of rows affected by statement '{}': {}".format(result.statement, result.rowcount))
+        except:
+            print("Exception")
+
+        return redirect(url_for('surgeryResults', rows=results))
+
+    cursor.close()
+    cnx.close()
+
     return render_template('surgeries.html')
+
+@app.route('/surgeryResults', methods=['GET', 'POST'])
+def surgeryResults():
+    if request.method == "POST":
+        print("Made it to surgery results")
+    return render_template('surgeryResults.html', rows=request.args.get('rows'))
 
 @app.route('/prescriptions', methods=['GET', 'POST'])
 def prescriptions():
+    cnx = mysql.connector.connect(user=usr, password=pw, host=hst, database=db, use_pure=True)
+    cursor = cnx.cursor()
     if request.method == "POST":
-        HomePage=request.form['home']
-        PetPage=request.form['pet']
-        OwnerPage=request.form['owner']
-        IllnessesPage=request.form['illnesses']
-        SurgeriesPage=request.form['surgeries']
-        PrescriptionsPage=request.form['prescriptions']
-        VaccinationsPage=request.form['vaccinations']
+        #HomePage=request.form['home']
+        #PetPage=request.form['pet']
+        #OwnerPage=request.form['owner']
+        #IllnessesPage=request.form['illnesses']
+        #SurgeriesPage=request.form['surgeries']
+        #PrescriptionsPage=request.form['prescriptions']
+        #VaccinationsPage=request.form['vaccinations']
+
+        # if(addpet):
+        #     return redirect(url_for('addOwner'))
+
+        def get_prescriptionResults_query(prescriptionID, prescriptionName):
+            return "SELECT PrescriptionID, PrescriptionName FROM Prescription WHERE PrescriptionID = '" + str(prescriptionID) + "' OR PrescriptionName = '" + str(prescriptionName) + "';"
+
+        prescriptionID=request.form['prescriptionID']
+        prescriptionName=request.form['prescriptionName']
+        prescriptionResultsQuery = get_prescriptionResults_query(prescriptionID, prescriptionName)
+        print("Prescription Results Query: " + prescriptionResultsQuery)
+
+        cnx.commit()
+        rows = []
+        try:
+            for result in cursor.execute(prescriptionResultsQuery, multi = True) :
+                if result.with_rows:
+                    print("Rows produced by statement '{}':".format(result.statement))
+                    results = result.fetchall()
+                    for r in results:
+                        print(r)
+                else:
+                    print("Number of rows affected by statement '{}': {}".format(result.statement, result.rowcount))
+        except:
+            print("Exception")
+
+        return redirect(url_for('prescriptionResults', rows=results))
+
+    cursor.close()
+    cnx.close()
+
     return render_template('prescriptions.html')
+
+@app.route('/prescriptionResults', methods=['GET', 'POST'])
+def prescriptionResults():
+    if request.method == "POST":
+        print("Made it to prescription results")
+    return render_template('prescriptionResults.html', rows=request.args.get('rows'))
 
 @app.route('/vaccinations', methods=['GET', 'POST'])
 def vaccinations():
+    cnx = mysql.connector.connect(user=usr, password=pw, host=hst, database=db, use_pure=True)
+    cursor = cnx.cursor()
     if request.method == "POST":
-        HomePage=request.form['home']
-        PetPage=request.form['pet']
-        OwnerPage=request.form['owner']
-        IllnessesPage=request.form['illnesses']
-        SurgeriesPage=request.form['surgeries']
-        PrescriptionsPage=request.form['prescriptions']
-        VaccinationsPage=request.form['vaccinations']
+        #HomePage=request.form['home']
+        #PetPage=request.form['pet']
+        #OwnerPage=request.form['owner']
+        #IllnessesPage=request.form['illnesses']
+        #SurgeriesPage=request.form['surgeries']
+        #PrescriptionsPage=request.form['prescriptions']
+        #VaccinationsPage=request.form['vaccinations']
+
+        # if(addpet):
+        #     return redirect(url_for('addOwner'))
+
+        def get_vaccinationResults_query(vaccinationID, vaccinationName):
+            return "SELECT VacID, VacName FROM Vaccination WHERE VacID = '" + str(vaccinationID) + "' OR VacName = '" + str(vaccinationName) + "';"
+
+        vaccinationID=request.form['vaccinationID']
+        vaccinationName=request.form['vaccinationName']
+        vaccinationResultsQuery = get_vaccinationResults_query(vaccinationID, vaccinationName)
+        print("Vaccination Results Query: " + vaccinationResultsQuery)
+
+        cnx.commit()
+        rows = []
+        try:
+            for result in cursor.execute(vaccinationResultsQuery, multi = True) :
+                if result.with_rows:
+                    print("Rows produced by statement '{}':".format(result.statement))
+                    results = result.fetchall()
+                    for r in results:
+                        print(r)
+                else:
+                    print("Number of rows affected by statement '{}': {}".format(result.statement, result.rowcount))
+        except:
+            print("Exception")
+
+        return redirect(url_for('vaccinationResults', rows=results))
+
+    cursor.close()
+    cnx.close()
+
     return render_template('vaccinations.html')
 
+@app.route('/vaccinationResults', methods=['GET', 'POST'])
+def vaccinationResults():
+    if request.method == "POST":
+        print("Made it to vaccination results")
+    return render_template('vaccinationResults.html', rows=request.args.get('rows'))
