@@ -33,6 +33,12 @@ def pet():
         #PrescriptionsPage=request.form['prescriptions']
         #VaccinationsPage=request.form['vaccinations']
 
+        
+
+        # if(addpet):
+        #     return redirect(url_for('addOwner'))
+
+
         def get_petResults_query(ownerLast, ownerFirst, petID, petName, petDOB):
             return "SELECT Pet.PetID, Pet.Name, Owner.FirstName, Owner.LastName, Pet.PetType, Pet.DOB, Pet.Weight, Pet.Height, Pet.Sex FROM Pet JOIN Owner ON Pet.OwnerID = Owner.OwnerID WHERE LastName = '" + str(ownerLast) + "' OR FirstName = '" + str(ownerFirst) + "' OR PetID = '" + str(petID) + "' OR Name = '" + str(petName) + "' OR Pet.DOB = '" + str(petDOB) + "';"
 
@@ -91,9 +97,9 @@ def newOwner():
 
 
         def get_insertOwner_query():
-            INSERT INTO Owner (OwnerID, FirstName, LastName, InsuranceNumber, InsuranceCompany, PhoneNumber, Email, PhysicalAddress, SSN, DOB) VALUES ('" + owner_id + "', '" + first_name + "', '" + last_name + "', '" + insurance_number + "', '" + insurance_company + "', '" + phone_number + "', '" + email + "', '" + physical_address + "', '" + ssn + "', '" + owner_dob + "');
+            return "INSERT INTO Owner (OwnerID, FirstName, LastName, InsuranceNumber, InsuranceCompany, PhoneNumber, Email, PhysicalAddress, SSN, DOB) VALUES ('" + owner_id + "', '" + first_name + "', '" + last_name + "', '" + insurance_number + "', '" + insurance_company + "', '" + phone_number + "', '" + email + "', '" + physical_address + "', '" + ssn + "', '" + owner_dob + "');"
 
-
+    return render_template('newOwner.html')
 
 
 
@@ -117,7 +123,8 @@ def newPet():
 
         def get_insertPet_query(): 
             return "INSERT INTO Pet (PetID, Name, OwnerID, PetType, DOB, Weight, Height, Sex) VALUES ('" + petID + "', '" + pet_name + "', '" + ownerID + "', '" + pet_type + "', '" + pet_dob + "', '" + weight + "', '" + height + "', '" + sex + "');"
-
+    
+    return render_template('newPet.html')
 
 @app.route('/owner', methods=['GET', 'POST'])
 def owner():
