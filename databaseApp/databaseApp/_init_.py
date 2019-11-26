@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 #Set db connection variables
 usr = "root"
-pw = "Baseball32"
+pw = "MySQLPassword"
 hst = "127.0.0.1"
 db = "VetClinic"
 
