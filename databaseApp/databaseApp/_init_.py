@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 import mysql.connector
 
 app = Flask(__name__)
+app.secret_key = "SecretKey"
 
 
 #Set db connection variables
@@ -29,19 +30,6 @@ def pet():
     cnx = mysql.connector.connect(user=usr, password=pw, host=hst, database=db, use_pure=True)
     cursor = cnx.cursor()
     if request.method == "POST":
-        #HomePage=request.form['home']
-        #PetPage=request.form['pet']
-        #OwnerPage=request.form['owner']
-        #IllnessesPage=request.form['illnesses']
-        #SurgeriesPage=request.form['surgeries']
-        #PrescriptionsPage=request.form['prescriptions']
-        #VaccinationsPage=request.form['vaccinations']
-
-        
-
-        # if(addpet):
-        #     return redirect(url_for('addOwner'))
-
 
         def get_petResults_query(ownerLast, ownerFirst, petID, petName, petDOB):
             return "SELECT Pet.PetID, Pet.Name, Owner.FirstName, Owner.LastName, Pet.PetType, Pet.DOB, Pet.Weight, Pet.Height, Pet.Sex FROM Pet JOIN Owner ON Pet.OwnerID = Owner.OwnerID WHERE LastName = '" + str(ownerLast) + "' OR FirstName = '" + str(ownerFirst) + "' OR PetID = '" + str(petID) + "' OR Name = '" + str(petName) + "' OR Pet.DOB = '" + str(petDOB) + "';"
@@ -87,16 +75,6 @@ def owner():
     cnx = mysql.connector.connect(user=usr, password=pw, host=hst, database=db, use_pure=True)
     cursor = cnx.cursor()
     if request.method == "POST":
-        #HomePage=request.form['home']
-        #PetPage=request.form['pet']
-        #OwnerPage=request.form['owner']
-        #IllnessesPage=request.form['illnesses']
-        #SurgeriesPage=request.form['surgeries']
-        #PrescriptionsPage=request.form['prescriptions']
-        #VaccinationsPage=request.form['vaccinations']
-
-        # if(addpet):
-        #     return redirect(url_for('addOwner'))
 
         def get_ownerResults_query(petID, petName):
             return "SELECT Pet.PetID, Pet.Name, Owner.OwnerId, Owner.FirstName, Owner.LastName, Owner.InsuranceNumber, Owner.InsuranceCompany, Owner.PhoneNumber, Owner.Email, Owner.PhysicalAddress, Owner.SSN, Owner.DOB FROM Pet JOIN Owner ON Pet.OwnerID = Owner.OwnerID WHERE PetID = '" + str(petID) + "' OR Name = '" + str(petName) + "';"
@@ -138,8 +116,6 @@ def newOwner():
     cnx = mysql.connector.connect(user=usr, password=pw, host=hst, database=db, use_pure=True)
     cursor = cnx.cursor()
     if request.method == "POST":
-        #how to generate owner ID?
-        owner_id = '2'
         first_name=request.form['first_name']
         last_name=request.form['last_name']
         insurance_number=request.form['insurance_number']
@@ -153,11 +129,16 @@ def newOwner():
 
 
         def get_insertOwner_query():
-            return "INSERT INTO Owner (OwnerID, FirstName, LastName, InsuranceNumber, InsuranceCompany, PhoneNumber, Email, PhysicalAddress, SSN, DOB) VALUES ('" + str(owner_id) + "', '" + str(first_name) + "', '" + str(last_name) + "', '" + str(insurance_number) + "', '" + str(insurance_company) + "', '" + str(phone_number) + "', '" + str(email) + "', '" + str(physical_address) + "', '" + str(ssn) + "', '" + str(owner_dob) + "');"
+            return "INSERT INTO Owner (FirstName, LastName, InsuranceNumber, InsuranceCompany, PhoneNumber, Email, PhysicalAddress, SSN, DOB) VALUES ('" + str(first_name) + "', '" + str(last_name) + "', '" + str(insurance_number) + "', '" + str(insurance_company) + "', '" + str(phone_number) + "', '" + str(email) + "', '" + str(physical_address) + "', '" + str(ssn) + "', '" + str(owner_dob) + "');"
 
         newOwnerQuery = get_insertOwner_query()
         cursor.execute(get_insertOwner_query())
         cnx.commit()
+        ownerID = cursor.lastrowid
+        print("last row: " + str(ownerID))
+
+        session['owner_id'] = str(ownerID)
+        print("session: " + session['owner_id'])
 
         return redirect(url_for('newPet'))
 
@@ -168,13 +149,9 @@ def newPet():
     cnx = mysql.connector.connect(user=usr, password=pw, host=hst, database=db, use_pure=True)
     cursor = cnx.cursor()
     if request.method == "POST":
-        #petID = 
-        #how to generate petID?
-        petID = '2'
-        pet_name=request.form['pet_name']
-        #owner_id=
         #how to get FK for ownerId?
-        ownerID = 2
+        pet_name=request.form['pet_name']
+        owner_id=session['owner_id']
         pet_type=request.form['pet_type']
         pet_dob=request.form['pet_dob']
         weight=request.form['weight']
@@ -182,7 +159,7 @@ def newPet():
         sex=request.form['sex']
 
         def get_insertPet_query(): 
-            return "INSERT INTO Pet (PetID, Name, OwnerID, PetType, DOB, Weight, Height, Sex) VALUES ('" + str(petID) + "', '" + str(pet_name) + "', '" + str(ownerID) + "', '" + str(pet_type) + "', '" + str(pet_dob) + "', '" + str(weight) + "', '" + str(height) + "', '" + str(sex) + "');"
+            return "INSERT INTO Pet (Name, OwnerID, PetType, DOB, Weight, Height, Sex) VALUES ('" + str(pet_name) + "', '" + owner_id + "', '" + str(pet_type) + "', '" + str(pet_dob) + "', '" + str(weight) + "', '" + str(height) + "', '" + str(sex) + "');"
 
         newPetQuery = get_insertPet_query()
         cursor.execute(get_insertPet_query())
@@ -197,16 +174,6 @@ def illnesses():
     cnx = mysql.connector.connect(user=usr, password=pw, host=hst, database=db, use_pure=True)
     cursor = cnx.cursor()
     if request.method == "POST":
-        #HomePage=request.form['home']
-        #PetPage=request.form['pet']
-        #OwnerPage=request.form['owner']
-        #IllnessesPage=request.form['illnesses']
-        #SurgeriesPage=request.form['surgeries']
-        #PrescriptionsPage=request.form['prescriptions']
-        #VaccinationsPage=request.form['vaccinations']
-
-        # if(addpet):
-        #     return redirect(url_for('addOwner'))
 
         def get_illnessResults_query(illnessID, illnessName):
             return "SELECT IllnessID, IllnessName FROM Illness WHERE IllnessID = '" + str(illnessID) + "' OR IllnessName = '" + str(illnessName) + "';"
@@ -248,16 +215,6 @@ def surgeries():
     cnx = mysql.connector.connect(user=usr, password=pw, host=hst, database=db, use_pure=True)
     cursor = cnx.cursor()
     if request.method == "POST":
-        #HomePage=request.form['home']
-        #PetPage=request.form['pet']
-        #OwnerPage=request.form['owner']
-        #IllnessesPage=request.form['illnesses']
-        #SurgeriesPage=request.form['surgeries']
-        #PrescriptionsPage=request.form['prescriptions']
-        #VaccinationsPage=request.form['vaccinations']
-
-        # if(addpet):
-        #     return redirect(url_for('addOwner'))
 
         def get_surgeryResults_query(surgeryID, surgeryName):
             return "SELECT SurgeryID, SurgeryName FROM Surgery WHERE SurgeryID = '" + str(surgeryID) + "' OR SurgeryName = '" + str(surgeryName) + "';"
@@ -299,16 +256,6 @@ def prescriptions():
     cnx = mysql.connector.connect(user=usr, password=pw, host=hst, database=db, use_pure=True)
     cursor = cnx.cursor()
     if request.method == "POST":
-        #HomePage=request.form['home']
-        #PetPage=request.form['pet']
-        #OwnerPage=request.form['owner']
-        #IllnessesPage=request.form['illnesses']
-        #SurgeriesPage=request.form['surgeries']
-        #PrescriptionsPage=request.form['prescriptions']
-        #VaccinationsPage=request.form['vaccinations']
-
-        # if(addpet):
-        #     return redirect(url_for('addOwner'))
 
         def get_prescriptionResults_query(prescriptionID, prescriptionName):
             return "SELECT PrescriptionID, PrescriptionName FROM Prescription WHERE PrescriptionID = '" + str(prescriptionID) + "' OR PrescriptionName = '" + str(prescriptionName) + "';"
@@ -350,16 +297,6 @@ def vaccinations():
     cnx = mysql.connector.connect(user=usr, password=pw, host=hst, database=db, use_pure=True)
     cursor = cnx.cursor()
     if request.method == "POST":
-        #HomePage=request.form['home']
-        #PetPage=request.form['pet']
-        #OwnerPage=request.form['owner']
-        #IllnessesPage=request.form['illnesses']
-        #SurgeriesPage=request.form['surgeries']
-        #PrescriptionsPage=request.form['prescriptions']
-        #VaccinationsPage=request.form['vaccinations']
-
-        # if(addpet):
-        #     return redirect(url_for('addOwner'))
 
         def get_vaccinationResults_query(vaccinationID, vaccinationName):
             return "SELECT VacID, VacName FROM Vaccination WHERE VacID = '" + str(vaccinationID) + "' OR VacName = '" + str(vaccinationName) + "';"
