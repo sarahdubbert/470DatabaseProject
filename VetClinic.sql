@@ -107,10 +107,23 @@ ALTER TABLE Owner MODIFY SSN VARCHAR(12) NOT NULL;
 
 SELECT * FROM Owner;
 SELECT * FROM Pet;
-DELETE FROM Owner WHERE OwnerID = 2;
-DELETE FROM Pet WHERE PetID = 2;
+DELETE FROM Owner WHERE OwnerID > 0;
+DELETE FROM Pet WHERE PetID > 0;
+
 
 INSERT INTO Illness (IllnessID, IllnessName) VALUES (1, "Cancer"), (2, "Diabetes"), (3, "Fleas/Ticks"), (4, "Arthritis"), (5, "Skin Infection");
 INSERT INTO Surgery (SurgeryID, SurgeryName) VALUES (1, "Neutering"), (2, "Internal (foreign object)"), (3, "Dental"), (4, "Cataract"), (5, "Wound Repair"), (6, "Spaying");
 INSERT INTO Prescription (PrescriptionID, PrescriptionName) VALUES (1, "Antibiotic"), (2, "Non-steroidal anti-inflammatory"), (3, "Antiparasitic"), (4, "Steroid"), (5, "Pain reliever");
 INSERT INTO Vaccination (VacID, VacName) VALUES (1, "Rabies"), (2, "DAPP"), (3, "Bordetella"), (4, "FVRCP"), (5, "FeLV");
+
+DELETE FROM Owner WHERE OwnerID > 0;
+DELETE FROM Pet WHERE PetID > 0;
+alter table Pet drop foreign key pet_ibfk_1;
+alter table Breed drop foreign key breed_ibfk_1;
+ALTER TABLE Pet MODIFY PetID INT NOT NULL AUTO_INCREMENT;
+ALTER TABLE Owner MODIFY OwnerID INT NOT NULL AUTO_INCREMENT;
+ALTER TABLE Pet
+ADD FOREIGN KEY (OwnerID) REFERENCES Owner(OwnerID);
+ALTER TABLE Breed
+ADD FOREIGN KEY (PetID) REFERENCES Pet(PetID);
+
