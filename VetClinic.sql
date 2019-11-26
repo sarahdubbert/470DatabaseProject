@@ -97,11 +97,15 @@ ADD FOREIGN KEY (PetID) REFERENCES Pet(PetID);
 ALTER TABLE Breed
 ADD FOREIGN KEY (PetType) REFERENCES Pet(PetType);
 
-ALTER TABLE Breed
-ADD FOREIGN KEY (PetType) REFERENCES Pet(PetType);
-
-SELECT * FROM Pet;
-INSERT INTO Pet (PetID, Name, OwnerID, PetType, DOB, Weight, Height, Sex) VALUES (1, 'Gary', 1, 'Dog', '04/11/18', 38, 15, 'M');
+INSERT INTO PET (PetID, Name, OwnerID, PetType, DOB, Weight, Height, Sex) VALUES (1, 'Gary', 1, 'Dog', '04/11/18', 38, 15, 'M');
 INSERT INTO Owner (OwnerID, FirstName, LastName, InsuranceNumber, InsuranceCompany, PhoneNumber, Email, PhysicalAddress, SSN, DOB) VALUES (1, 'Sarah', 'Dubbert', '1122334455', 'Good Insurance Company', 1234567890, 'sarah@mail.com', '123 Maple St. Kansas City, MO 64521', 87654322, '04/17/97');
 
 SELECT Pet.PetID, Pet.Name, Owner.FirstName, Owner.LastName, Pet.PetType, Pet.DOB, Pet.Weight, Pet.Height, Pet.Sex FROM Pet JOIN Owner ON Pet.OwnerID = Owner.OwnerID WHERE LastName = '' OR FirstName = '' OR PetID = '1' OR Name = '' OR Pet.DOB = '';
+
+ALTER TABLE Owner MODIFY PhoneNumber VARCHAR(12) NOT NULL;
+ALTER TABLE Owner MODIFY SSN VARCHAR(12) NOT NULL;
+
+SELECT * FROM Owner;
+SELECT * FROM Pet;
+DELETE FROM Owner WHERE OwnerID = 2;
+DELETE FROM Pet WHERE PetID = 2;
