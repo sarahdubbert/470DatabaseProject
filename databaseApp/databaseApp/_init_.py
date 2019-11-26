@@ -102,7 +102,7 @@ def newOwner():
             return "INSERT INTO Owner (OwnerID, FirstName, LastName, InsuranceNumber, InsuranceCompany, PhoneNumber, Email, PhysicalAddress, SSN, DOB) VALUES ('" + str(owner_id) + "', '" + str(first_name) + "', '" + str(last_name) + "', '" + str(insurance_number) + "', '" + str(insurance_company) + "', '" + str(phone_number) + "', '" + str(email) + "', '" + str(physical_address) + "', '" + str(ssn) + "', '" + str(owner_dob) + "');"
 
         newOwnerQuery = get_insertOwner_query()
-        cursor.execute(get_insertOwner_query)
+        cursor.execute(get_insertOwner_query())
         cnx.commit()
 
         return redirect(url_for('newPet'))
@@ -120,7 +120,7 @@ def newPet():
     if request.method == "POST":
         #petID = 
         #how to generate petID?
-        petID = 2
+        petID = '2'
         pet_name=request.form['pet_name']
         #owner_id=
         #how to get FK for ownerId?
@@ -132,7 +132,13 @@ def newPet():
         sex=request.form['sex']
 
         def get_insertPet_query(): 
-            return "INSERT INTO Pet (PetID, Name, OwnerID, PetType, DOB, Weight, Height, Sex) VALUES ('" + petID + "', '" + pet_name + "', '" + ownerID + "', '" + pet_type + "', '" + pet_dob + "', '" + weight + "', '" + height + "', '" + sex + "');"
+            return "INSERT INTO Pet (PetID, Name, OwnerID, PetType, DOB, Weight, Height, Sex) VALUES ('" + str(petID) + "', '" + str(pet_name) + "', '" + str(ownerID) + "', '" + str(pet_type) + "', '" + str(pet_dob) + "', '" + str(weight) + "', '" + str(height) + "', '" + str(sex) + "');"
+
+        newPetQuery = get_insertPet_query()
+        cursor.execute(get_insertPet_query())
+        cnx.commit()
+
+        return redirect(url_for('pet'))
     
     return render_template('newPet.html')
 
