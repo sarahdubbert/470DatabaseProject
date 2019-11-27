@@ -245,6 +245,23 @@ def surgeries():
 
     return render_template('surgeries.html')
 
+@app.route('/newSurgery', methods=['GET', 'POST'])
+def newSurgery():
+    cnx = mysql.connector.connect(user=usr, password=pw, host=hst, database=db, use_pure=True)
+    cursor = cnx.cursor()
+    if request.method == "POST":
+        pet_id=request.form['pet_id']
+        surgery_id=request.form['surgery_id']
+        surgery_date=request.form['surgery_date']
+
+        def get_insertSurgery_query():
+            return "INSERT INTO isTreatedWith (SurgeryID, PetID, SurgeryDate) VALUES ('" + str(surgery_id) + "', '" + str(pet_id) + "', '" + str(surgery_date) + "');"
+
+        cursor.execute(get_insertSurgery_query())
+        cnx.commit()
+
+    return render_template('newSurgery.html')
+
 @app.route('/surgeryResults', methods=['GET', 'POST'])
 def surgeryResults():
     if request.method == "POST":
@@ -285,6 +302,25 @@ def prescriptions():
     cnx.close()
 
     return render_template('prescriptions.html')
+
+@app.route('/newPrescription', methods=['GET', 'POST'])
+def newPrescription():
+    cnx = mysql.connector.connect(user=usr, password=pw, host=hst, database=db, use_pure=True)
+    cursor = cnx.cursor()
+    if request.method == "POST":
+        pet_id=request.form['pet_id']
+        prescription_id=request.form['prescription_id']
+        date_prescribed=request.form['date_prescribed']
+        description=request.form['description']
+
+        def get_insertPrescription_query():
+            return "INSERT INTO isPrescribed (PrescriptionID, PetID, DatePrescribed, Description) VALUES ('" + str(prescription_id) + "', '" + str(pet_id) + "', '" + str(date_prescribed) + "', '" + str(description) + "');"
+
+        cursor.execute(get_insertPrescription_query())
+        cnx.commit()
+
+    return render_template('newPrescription.html')
+
 
 @app.route('/prescriptionResults', methods=['GET', 'POST'])
 def prescriptionResults():
