@@ -34,7 +34,6 @@ def pet():
         def get_petResults_query(ownerLast, ownerFirst, petID, petName, petDOB):
             return "SELECT Pet.PetID, Pet.Name, Owner.FirstName, Owner.LastName, Pet.PetType, Pet.DOB, Pet.Weight, Pet.Height, Pet.Sex FROM Pet JOIN Owner ON Pet.OwnerID = Owner.OwnerID WHERE LastName = '" + str(ownerLast) + "' OR FirstName = '" + str(ownerFirst) + "' OR PetID = '" + str(petID) + "' OR Name = '" + str(petName) + "' OR Pet.DOB = '" + str(petDOB) + "';"
 
-
         ownerLast=request.form['ownerLast']
         ownerFirst=request.form['ownerFirst']
         petID=request.form['petID']
@@ -67,7 +66,9 @@ def pet():
 @app.route('/petResults', methods=['GET', 'POST'])
 def petResults():
     if request.method == "POST":
-        print("Made it to pet results")
+        
+        print("rows info: " + str(rows))
+          
     return render_template('petResults.html', rows=request.args.get('rows'))
 
 @app.route('/owner', methods=['GET', 'POST'])
@@ -168,6 +169,7 @@ def newPet():
         return redirect(url_for('pet'))
     
     return render_template('newPet.html')
+
 
 @app.route('/illnesses', methods=['GET', 'POST'])
 def illnesses():
@@ -402,3 +404,33 @@ def vaccinationResults():
     if request.method == "POST":
         print("Made it to vaccination results")
     return render_template('vaccinationResults.html', rows=request.args.get('rows'))
+
+@app.route('/deletePet', methods=['GET', 'POST'])
+def deletePet():
+    cnx = mysql.connector.connect(user=usr, password=pw, host=hst, database=db, use_pure=True)
+    cursor = cnx.cursor()
+    if request.method == "POST":
+        remove_pet_id=request.form['remove_pet_id']
+
+        def get_removePet_query():
+            return "DELETE FROM Pet WHERE PetID = '" + str(remove_pet_id) + "';"
+
+        cursor.execute(get_removePet_query())
+        cnx.commit()
+          
+    return render_template('deletePet.html')
+
+@app.route('/deleteOwner', methods=['GET', 'POST'])
+def deleteOwner():
+    cnx = mysql.connector.connect(user=usr, password=pw, host=hst, database=db, use_pure=True)
+    cursor = cnx.cursor()
+    if request.method == "POST":
+        remove_owner_id=request.form['remove_owner_id']
+        
+        def get_removeOwner_query():
+            return "DELETE FROM Owner WHERE OwnerID = '" + str(remove_owner_id) + "';"
+
+        cursor.execute(get_removeOwner_query())
+        cnx.commit()
+          
+    return render_template('deleteOwner.html')
