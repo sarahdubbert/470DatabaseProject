@@ -114,7 +114,7 @@ def ownerResults():
 @app.route('/newOwner', methods=['GET', 'POST'])
 def newOwner():
     cnx = mysql.connector.connect(user=usr, password=pw, host=hst, database=db, use_pure=True)
-    cursor = cnx.cursor()
+    cursor = cnx.cursor()      
     if request.method == "POST":
         first_name=request.form['first_name']
         last_name=request.form['last_name']
@@ -140,7 +140,7 @@ def newOwner():
         session['owner_id'] = str(ownerID)
         print("session: " + session['owner_id'])
 
-        return redirect(url_for('newPet'))
+        return redirect(url_for('owner'))
 
     return render_template('newOwner.html')
 
