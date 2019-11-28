@@ -204,6 +204,23 @@ def illnesses():
 
     return render_template('illnesses.html')
 
+@app.route('/newIllness', methods=['GET', 'POST'])
+def newIllness():
+    cnx = mysql.connector.connect(user=usr, password=pw, host=hst, database=db, use_pure=True)
+    cursor = cnx.cursor()
+    if request.method == "POST":
+        pet_id=request.form['pet_id']
+        illness_id=request.form['illness_id']
+        illness_date=request.form['illness_date']
+
+        def get_insertIllness_query():
+            return "INSERT INTO isDiagnosedWith (IllnessID, PetID, IllnessDate) VALUES ('" + str(illness_id) + "', '" + str(pet_id) + "', '" + str(illness_date) + "');"
+
+        cursor.execute(get_insertIllness_query())
+        cnx.commit()
+
+    return render_template('newIllness.html')
+
 @app.route('/illnessResults', methods=['GET', 'POST'])
 def illnessResults():
     if request.method == "POST":
@@ -362,6 +379,23 @@ def vaccinations():
     cnx.close()
 
     return render_template('vaccinations.html')
+
+@app.route('/newVaccination', methods=['GET', 'POST'])
+def newVaccination():
+    cnx = mysql.connector.connect(user=usr, password=pw, host=hst, database=db, use_pure=True)
+    cursor = cnx.cursor()
+    if request.method == "POST":
+        pet_id=request.form['pet_id']
+        vaccination_id=request.form['vaccination_id']
+        vaccination_date=request.form['vaccination_date']
+
+        def get_insertVaccination_query():
+            return "INSERT INTO isAdministered (VacID, PetID, VaccinationDate) VALUES ('" + str(vaccination_id) + "', '" + str(pet_id) + "', '" + str(vaccination_date) + "');"
+
+        cursor.execute(get_insertVaccination_query())
+        cnx.commit()
+
+    return render_template('newVaccination.html')
 
 @app.route('/vaccinationResults', methods=['GET', 'POST'])
 def vaccinationResults():

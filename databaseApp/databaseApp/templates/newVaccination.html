@@ -7,3 +7,15 @@
   <a href="/prescriptions" class="btn btn-default" name = "prescriptions">Prescriptions</a>
   <a href="/vaccinations" class="btn btn-default" name = "vaccinations">Vaccinations</a>
 </div>
+
+<br/>
+<h2>Add New Vaccination</h2>
+
+<div class="new_vaccination">
+<form action="/newVaccination" method=post>
+    Pet ID: <input type=text name=pet_id></br>
+    Vaccination ID: <input type=text name=vaccination_id></br>
+    Vaccination Date: <input type=text name=vaccination_date></br>
+    <div class="actions"><input type=submit value="Submit"></div>
+</form>
+</div>
