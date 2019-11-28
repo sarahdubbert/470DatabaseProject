@@ -8,26 +8,11 @@
   <a href="/vaccinations" class="btn btn-default" name = "vaccinations">Vaccinations</a>
 </div>
 
-<br/>
-<div class="addnew">
-  <form action="/newOwner" method=post>
-      <div class="actions"><input type=submit value="Add a New Owner"></div>
-  </form>
-</div>
+<h3>Remove Owner:</h3>
 
-<div class="deleteOwner">
+<div class="ownerDelete">
 <form action="/deleteOwner" method=post>
-    <div class="actions"><input type=submit value="Remove Owner from System"></div>
+    Owner ID: <input type=text name=remove_owner_id></br>
+    <div class="actions"><input type=submit value="Remove"></div>
 </form>
 </div>
-  
-  
-  <h3>Search for Owner:</h3>
-  
-  <div class="ownerSearch">
-  <form action="/owner" method=post>
-      Pet Name <input type=text name=petName></br>
-      Pet ID <input type=text name=petID></br>
-      <div class="actions"><input type=submit value="Submit"></div>
-  </form>
-  </div>
