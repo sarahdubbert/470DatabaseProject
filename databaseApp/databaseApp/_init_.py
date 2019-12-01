@@ -1,15 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import mysql.connector
+from creds import usr, pw, hst, db
+
 
 app = Flask(__name__)
 app.secret_key = "SecretKey"
 
-
-#Set db connection variables
-usr = "root"
-pw = "MySQLPassword"
-hst = "127.0.0.1"
-db = "VetClinic"
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
