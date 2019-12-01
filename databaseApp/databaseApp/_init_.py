@@ -31,15 +31,20 @@ def pet():
     cursor = cnx.cursor()
     if request.method == "POST":
 
-        def get_petResults_query(ownerLast, ownerFirst, petID, petName, petDOB):
-            return "SELECT Pet.PetID, Pet.Name, Owner.FirstName, Owner.LastName, Pet.PetType, Pet.DOB, Pet.Weight, Pet.Height, Pet.Sex FROM Pet JOIN Owner ON Pet.OwnerID = Owner.OwnerID WHERE LastName = '" + str(ownerLast) + "' OR FirstName = '" + str(ownerFirst) + "' OR PetID = '" + str(petID) + "' OR Name = '" + str(petName) + "' OR Pet.DOB = '" + str(petDOB) + "';"
+        def get_petResults_query(petName, petType, petWeight, petHeight, petSex, petDOB, ownerFirst, ownerLast):
+            # return "SELECT Pet.PetID, Pet.Name, Owner.FirstName, Owner.LastName, Pet.PetType, Pet.DOB, Pet.Weight, Pet.Height, Pet.Sex FROM Pet JOIN Owner ON Pet.OwnerID = Owner.OwnerID WHERE LastName = '" + str(ownerLast) + "' OR FirstName = '" + str(ownerFirst) + "' OR PetID = '" + str(petID) + "' OR Name = '" + str(petName) + "' OR Pet.DOB = '" + str(petDOB) + "';"
+            return "SELECT Pet.PetID, Pet.Name, Owner.FirstName, Owner.LastName, Pet.PetType, Pet.DOB, Pet.Weight, Pet.Height, Pet.Sex FROM Pet JOIN Owner ON Pet.OwnerID = Owner.OwnerID WHERE Name = '" + str(petName) + "' OR PetType = '" + str(petType) + "' OR Weight = '" + str(petWeight) + "' OR Height = '" + str(petHeight) + "' OR Sex = '" + str(petSex) + "' OR Pet.DOB = '" + str(petDOB) + "' OR FirstName = '" + str(ownerFirst) + "' OR LastName = '" +str(ownerLast) + "';"
 
-        ownerLast=request.form['ownerLast']
-        ownerFirst=request.form['ownerFirst']
-        petID=request.form['petID']
         petName=request.form['petName']
+        petType=request.form['petType']
+        petWeight=request.form['petWeight']
+        petHeight=request.form['petHeight']
+        petSex=request.form['petSex']
         petDOB=request.form['petDOB']
-        petResultsQuery = get_petResults_query(ownerLast, ownerFirst, petID, petName, petDOB)
+        ownerFirst=request.form['ownerFirst']
+        ownerLast=request.form['ownerLast']
+        # petID=request.form['petID']
+        petResultsQuery = get_petResults_query(petName, petType, petWeight, petHeight, petSex, petDOB, ownerFirst, ownerLast)
         print("pet Results Query: " + petResultsQuery)
 
         cnx.commit()
@@ -105,12 +110,20 @@ def owner():
     cursor = cnx.cursor()
     if request.method == "POST":
 
-        def get_ownerResults_query(petID, petName):
-            return "SELECT Pet.PetID, Pet.Name, Owner.OwnerId, Owner.FirstName, Owner.LastName, Owner.InsuranceNumber, Owner.InsuranceCompany, Owner.PhoneNumber, Owner.Email, Owner.PhysicalAddress, Owner.SSN, Owner.DOB FROM Pet JOIN Owner ON Pet.OwnerID = Owner.OwnerID WHERE PetID = '" + str(petID) + "' OR Name = '" + str(petName) + "';"
+        def get_ownerResults_query(ownerFirst, ownerLast, ownerDOB, insComp, phone, email, address):
+            return "SELECT Pet.PetID, Pet.Name, Owner.OwnerId, Owner.FirstName, Owner.LastName, Owner.InsuranceNumber, Owner.InsuranceCompany, Owner.PhoneNumber, Owner.Email, Owner.PhysicalAddress, Owner.SSN, Owner.DOB FROM Pet JOIN Owner ON Pet.OwnerID = Owner.OwnerID WHERE FirstName = '" + str(ownerFirst) + "' OR LastName = '" + str(ownerLast) + "' OR Owner.DOB = '" + str(ownerDOB) + "' OR InsuranceCompany = '" + str(insComp) + "' OR PhoneNumber = '" + str(phone) + "' OR Email = '" + str(email) + "' OR PhysicalAddress = '" + str(address) + "';"
 
-        petID=request.form['petID']
-        petName=request.form['petName']
-        ownerResultsQuery = get_ownerResults_query(petID, petName)
+        ownerFirst=request.form['ownerFirst']
+        ownerLast=request.form['ownerLast']
+        ownerDOB=request.form['ownerDOB']
+        insComp=request.form['insComp']
+        phone=request.form['phone']
+        email=request.form['email']
+        address=request.form['address']
+
+        # petID=request.form['petID']
+        # petName=request.form['petName']
+        ownerResultsQuery = get_ownerResults_query(ownerFirst, ownerLast, ownerDOB, insComp, phone, email, address)
         print("Owner Results Query: " + ownerResultsQuery)
 
         cnx.commit()
