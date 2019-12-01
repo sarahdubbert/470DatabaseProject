@@ -91,12 +91,6 @@ PRIMARY KEY(SurgeryID, PetID));
 ALTER TABLE Pet
 ADD FOREIGN KEY (OwnerID) REFERENCES Owner(OwnerID);
 
-ALTER TABLE Breed
-ADD FOREIGN KEY (PetID) REFERENCES Pet(PetID);
-
-ALTER TABLE Breed
-ADD FOREIGN KEY (PetType) REFERENCES Pet(PetType);
-
 INSERT INTO PET (PetID, Name, OwnerID, PetType, DOB, Weight, Height, Sex) VALUES (1, 'Gary', 1, 'Dog', '04/11/18', 38, 15, 'M');
 INSERT INTO Owner (OwnerID, FirstName, LastName, InsuranceNumber, InsuranceCompany, PhoneNumber, Email, PhysicalAddress, SSN, DOB) VALUES (1, 'Sarah', 'Dubbert', '1122334455', 'Good Insurance Company', 1234567890, 'sarah@mail.com', '123 Maple St. Kansas City, MO 64521', 87654322, '04/17/97');
 
@@ -124,10 +118,33 @@ ALTER TABLE Pet MODIFY PetID INT NOT NULL AUTO_INCREMENT;
 ALTER TABLE Owner MODIFY OwnerID INT NOT NULL AUTO_INCREMENT;
 ALTER TABLE Pet
 ADD FOREIGN KEY (OwnerID) REFERENCES Owner(OwnerID);
-ALTER TABLE Breed
-ADD FOREIGN KEY (PetID) REFERENCES Pet(PetID);
 
 ALTER TABLE isPrescribed ADD COLUMN Description VARCHAR(75) NULL;
+DROP TABLE Breed;
+
+CREATE TABLE Breed (
+PetID INT NOT NULL,
+Breed VARCHAR(30) NOT NULL,
+PRIMARY KEY(PetID));
+
+ALTER TABLE Breed ADD FOREIGN KEY (PetID) REFERENCES Pet(PetID);
+ALTER TABLE isDiagnosedWith ADD FOREIGN KEY (IllnessID) REFERENCES Illness(IllnessID);
+ALTER TABLE isPrescribed ADD FOREIGN KEY (PrescriptionID) REFERENCES Prescription(PrescriptionID);
+ALTER TABLE isAdministered ADD FOREIGN KEY (VacID) REFERENCES Vaccination(VacID);
+ALTER TABLE isTreatedWith ADD FOREIGN KEY (SurgeryID) REFERENCES Surgery(SurgeryID);
+
+ALTER TABLE isDiagnosedWith ADD FOREIGN KEY (PetID) REFERENCES Pet(PetID);
+ALTER TABLE isPrescribed ADD FOREIGN KEY (PetID) REFERENCES Pet(PetID);
+ALTER TABLE isAdministered ADD FOREIGN KEY (PetID) REFERENCES Pet(PetID);
+ALTER TABLE isTreatedWith ADD FOREIGN KEY (PetID) REFERENCES Pet(PetID);
+
+ALTER TABLE Treatment ADD FOREIGN KEY (IllnessID) REFERENCES Illness(IllnessID);
+
+
+
+
+
+
 
 
 
