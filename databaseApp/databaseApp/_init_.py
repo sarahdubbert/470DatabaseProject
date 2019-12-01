@@ -55,7 +55,6 @@ def pet():
                     print("Number of rows affected by statement '{}': {}".format(result.statement, result.rowcount))
         except:
             print("Exception")
-
         return redirect(url_for('petResults', rows=results))
 
     cursor.close()
@@ -66,10 +65,39 @@ def pet():
 @app.route('/petResults', methods=['GET', 'POST'])
 def petResults():
     if request.method == "POST":
-        
-        print("rows info: " + str(rows))
-          
+        print("Made it to results page")
     return render_template('petResults.html', rows=request.args.get('rows'))
+
+@app.route('/newPet', methods=['GET', 'POST'])
+def newPet():
+    cnx = mysql.connector.connect(user=usr, password=pw, host=hst, database=db, use_pure=True)
+    cursor = cnx.cursor()
+    if request.method == "POST":
+        #how to get FK for ownerId?
+        pet_name=request.form['pet_name']
+        owner_id=session['owner_id']
+        pet_type=request.form['pet_type']
+        pet_dob=request.form['pet_dob']
+        weight=request.form['weight']
+        height=request.form['height']
+        sex=request.form['sex']
+
+        def get_insertPet_query(): 
+            return "INSERT INTO Pet (Name, OwnerID, PetType, DOB, Weight, Height, Sex) VALUES ('" + str(pet_name) + "', '" + owner_id + "', '" + str(pet_type) + "', '" + str(pet_dob) + "', '" + str(weight) + "', '" + str(height) + "', '" + str(sex) + "');"
+
+        newPetQuery = get_insertPet_query()
+        cursor.execute(get_insertPet_query())
+        cnx.commit()
+
+        return redirect(url_for('pet'))
+    
+    return render_template('newPet.html')
+
+@app.route('/updatePet', methods=['GET', 'POST'])
+def updatePet():
+    if request.method == "POST":
+        print("Made it to update page")
+    return render_template('updatePet.html', rows=request.args.get('rows'))
 
 @app.route('/owner', methods=['GET', 'POST'])
 def owner():
@@ -145,31 +173,11 @@ def newOwner():
 
     return render_template('newOwner.html')
 
-@app.route('/newPet', methods=['GET', 'POST'])
-def newPet():
-    cnx = mysql.connector.connect(user=usr, password=pw, host=hst, database=db, use_pure=True)
-    cursor = cnx.cursor()
+@app.route('/updateOwner', methods=['GET', 'POST'])
+def updateOwner():
     if request.method == "POST":
-        #how to get FK for ownerId?
-        pet_name=request.form['pet_name']
-        owner_id=session['owner_id']
-        pet_type=request.form['pet_type']
-        pet_dob=request.form['pet_dob']
-        weight=request.form['weight']
-        height=request.form['height']
-        sex=request.form['sex']
-
-        def get_insertPet_query(): 
-            return "INSERT INTO Pet (Name, OwnerID, PetType, DOB, Weight, Height, Sex) VALUES ('" + str(pet_name) + "', '" + owner_id + "', '" + str(pet_type) + "', '" + str(pet_dob) + "', '" + str(weight) + "', '" + str(height) + "', '" + str(sex) + "');"
-
-        newPetQuery = get_insertPet_query()
-        cursor.execute(get_insertPet_query())
-        cnx.commit()
-
-        return redirect(url_for('pet'))
-    
-    return render_template('newPet.html')
-
+        print("Made it to update page")
+    return render_template('updateOwner.html', rows=request.args.get('rows'))
 
 @app.route('/illnesses', methods=['GET', 'POST'])
 def illnesses():
