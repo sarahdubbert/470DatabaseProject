@@ -10,16 +10,17 @@
   
   <h3>Update Pet Information:</h3>
   
-  <div class="petUpdate">
-  <form action="/updatePet" method=post>
-      Owner Last Name: <input type=text name=ownerLast></br>
-      Owner First Name: <input type=text name=ownerFirst></br>
-      Pet Name <input type=text name=petName></br>
-      Pet DOB <input type=text name=petDOB></br>
-      Pet Weight <input type=text name=petWeight></br>
-      Pet Height <input type=text name=petHeight></br>
-      <div class="actions"><input type=submit value="Submit"></div>
-  </form>
-  </div>
+    <div class="petUpdate">
+      <form action="/updatePet" method=post>
+        Enter Pet ID to update: <input type=text name=petID></br>
+        <div class="actions"><button type=submit name="action" value="load">Load Current Pet Information</button></div>
+      </br>
+        Pet Name <input type=text name=name value={{name}}></br>
+        Pet DOB <input type=text name=dob value={{dob}}></br>
+        Pet Weight <input type=text name=weight value={{weight}}></br>
+        Pet Height <input type=text name=height value={{height}}></br>
+        <div class="actions"><button type=submit name="action" value="submit">Submit</button></div>
+    </form>
+    </div>
   
   

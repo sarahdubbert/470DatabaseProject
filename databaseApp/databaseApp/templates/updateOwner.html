@@ -12,14 +12,17 @@
   
   <div class="ownerUpdate">
   <form action="/updateOwner" method=post>
-      Owner Last Name: <input type=text name=ownerLast></br>
-      Owner First Name: <input type=text name=ownerFirst></br>
-      Insurance Number: <input type=text name=insNum></br>
-      Insurance Company: <input type=text name=insComp></br>
-      Phone Number: <input type=text name=phone></br>
-      Email Address: <input type=text name=email></br>
-      Physical Address: <input type=text name=address></br>
-      <div class="actions"><input type=submit value="Submit"></div>
+        Enter Owner ID to update: <input type=text name=ownerID></br>
+        <div class="actions"><button type=submit name="action" value="load">Load Current Owner Information</button></div>
+    </br>
+    Owner First Name: <input type=text name=ownerFirst value={{ownerFirst}}></br>
+        Owner Last Name: <input type=text name=ownerLast value={{ownerLast}}></br>
+        Insurance Number: <input type=text name=insNum value={{insNum}}></br>
+        Insurance Company: <input type=text name=insComp value={{insComp}}></br>
+        Phone Number: <input type=text name=phone value={{phone}}></br>
+        Email Address: <input type=text name=email value={{email}}></br>
+        Physical Address: <input type=text name=address value={{address}}></br>
+        <div class="actions"><button type=submit name="action" value="submit">Submit</button></div>
   </form>
   </div>
   

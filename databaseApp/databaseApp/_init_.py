@@ -96,9 +96,57 @@ def newPet():
 
 @app.route('/updatePet', methods=['GET', 'POST'])
 def updatePet():
+    cnx = mysql.connector.connect(user=usr, password=pw, host=hst, database=db, use_pure=True)
+    cursor = cnx.cursor()
     if request.method == "POST":
-        print("Made it to update page")
-    return render_template('updatePet.html', rows=request.args.get('rows'))
+        button=request.form['action']
+
+        petID=request.form['petID']
+        if button == "load":
+            print('load button clicked')
+
+            def get_petInfo_query(petID): 
+                return "SELECT Name, DOB, Weight, Height FROM Pet WHERE PetID = '" + str(petID) + "';"
+
+            loadPetInfo = get_petInfo_query(petID)
+            print(loadPetInfo)
+
+            cnx.commit()
+            rows = []
+            try:
+                for result in cursor.execute(loadPetInfo, multi = True) :
+                    if result.with_rows:
+                        print("Rows produced by statement '{}':".format(result.statement))
+                        results = result.fetchall()
+                        for r in results:
+                            print(r)
+                    else:
+                        print("Number of rows affected by statement '{}': {}".format(result.statement, result.rowcount))
+            except:
+                print("Exception")
+            return render_template('updatePet.html', name=results[0][0], dob=results[0][1], weight=results[0][2], height=results[0][3])
+        elif button == "submit":
+            print('update button clicked')
+
+            def set_petInfo_query():
+                return "UPDATE Pet SET Name = '" + str(name) + "', DOB = '" + str(dob) + "', Weight = '" + str(weight) + "', Height = '" + str(height) + "' WHERE PetID = '" + str(petID) + "';"
+        
+            name=request.form['name']
+            dob=request.form['dob']
+            weight=request.form['weight']
+            height=request.form['height']
+            petID=request.form['petID']
+
+            updatePetInfo = set_petInfo_query()
+            print(updatePetInfo)
+
+            cursor.execute(set_petInfo_query())
+            cnx.commit()
+        
+    cursor.close()
+    cnx.close()
+    
+    return render_template('updatePet.html')
 
 @app.route('/owner', methods=['GET', 'POST'])
 def owner():
@@ -184,9 +232,59 @@ def newOwner():
 
 @app.route('/updateOwner', methods=['GET', 'POST'])
 def updateOwner():
+    cnx = mysql.connector.connect(user=usr, password=pw, host=hst, database=db, use_pure=True)
+    cursor = cnx.cursor()
     if request.method == "POST":
-        print("Made it to update page")
-    return render_template('updateOwner.html', rows=request.args.get('rows'))
+        button=request.form['action']
+
+        ownerID=request.form['ownerID']
+        if button == "load":
+            print('load button clicked')
+
+            def get_ownerInfo_query(): 
+                return "SELECT FirstName, LastName, InsuranceNumber, InsuranceCompany, PhoneNumber, Email, PhysicalAddress FROM Owner WHERE OwnerID = '" + str(ownerID) + "';"
+
+            loadOwnerInfo = get_ownerInfo_query()
+            print(loadOwnerInfo)
+
+            cnx.commit()
+            rows = []
+            try:
+                for result in cursor.execute(loadOwnerInfo, multi = True) :
+                    if result.with_rows:
+                        print("Rows produced by statement '{}':".format(result.statement))
+                        results = result.fetchall()
+                        for r in results:
+                            print(r)
+                    else:
+                        print("Number of rows affected by statement '{}': {}".format(result.statement, result.rowcount))
+            except:
+                print("Exception")
+            return render_template('updateOwner.html', ownerFirst=results[0][0], ownerLast=results[0][1], insNum=results[0][2], insComp=results[0][3], phone=results[0][4], email=results[0][5], address=results[0][6])
+        elif button == "submit":
+            print('update button clicked')
+
+            def set_ownerInfo_query():
+                return "UPDATE Owner SET FirstName = '" + str(ownerFirst) + "', LastName = '" + str(ownerLast) + "', InsuranceNumber = '" + str(insNum) + "', InsuranceCompany = '" + str(insComp) + "', PhoneNumber = '" + str(phone) + "', Email = '" + str(email) + "', PhysicalAddress = '" + str(address) + "' WHERE OwnerID = '" + str(ownerID) + "';"
+        
+            ownerFirst=request.form['ownerFirst']
+            ownerLast=request.form['ownerLast']
+            insNum=request.form['insNum']
+            insComp=request.form['insComp']
+            phone=request.form['phone']
+            email=request.form['email']
+            address=request.form['address']
+
+            updateOwnerInfo = set_ownerInfo_query()
+            print(updateOwnerInfo)
+
+            cursor.execute(set_ownerInfo_query())
+            cnx.commit()
+        
+    cursor.close()
+    cnx.close()
+    
+    return render_template('updateOwner.html')
 
 @app.route('/illnesses', methods=['GET', 'POST'])
 def illnesses():
