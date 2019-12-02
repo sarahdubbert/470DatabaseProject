@@ -15,6 +15,11 @@
   </form>
   </div>
   
+  <div class="vaccinationSearch">
+      <form action="/vaccinations" method=post>
+          <div class="actions"><button type=submit name="action" value="getAll">Return All Vaccinations</button></div>
+      </form>
+  </div>
   
   <h3>Search for Vaccination:</h3>
   
@@ -22,6 +27,6 @@
   <form action="/vaccinations" method=post>
       Vaccination Name <input type=text name=vaccinationName></br>
       Vaccination ID <input type=text name=vaccinationID></br>
-      <div class="actions"><input type=submit value="Submit"></div>
+      <div class="actions"><button type=submit name="action" value="submit">Submit</button></div>
   </form>
   </div>

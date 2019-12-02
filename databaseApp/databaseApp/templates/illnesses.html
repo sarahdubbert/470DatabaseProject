@@ -15,13 +15,18 @@
   </form>
   </div>
   
+  <div class="illnessSearch">
+      <form action="/illnesses" method=post>
+          <div class="actions"><button type=submit name="action" value="getAll">Return All Illnesses</button></div>
+      </form>
+  </div>
+  
   <h3>Search for Illness:</h3>
   
   <div class="illnessSearch">
   <form action="/illnesses" method=post>
       Illness Name <input type=text name=illnessName></br>
       Illness ID <input type=text name=illnessID></br>
-      <div class="actions"><input type=submit value="Submit"></div>
+      <div class="actions"><button type=submit name="action" value="submit">Submit</button></div>
   </form>
-
   </div>

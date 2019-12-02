@@ -11,7 +11,7 @@
 <h3>Pet Search Results:</h3>
 </br>
 
-<table style="width:100%">
+<table style="width:100%" border="1px solid black">
   <tr>
     <th>Pet ID</th>
     <th>Pet Name</th>
@@ -23,6 +23,17 @@
     <th>Height</th>
     <th>Sex</th>
   </tr>
+  {%for i in range(0, len)%}
+    <tr>
+      <td>{{ ids[i] }}</td>
+      <td>{{ pNames[i] }}</td>
+      <td>{{ fNames[i] }}</td>
+      <td>{{ lNames[i] }}</td>
+      <td>{{ types[i] }}</td>
+      <td>{{ dobs[i] }}</td>
+      <td>{{ weights[i] }}</td>
+      <td>{{ heights[i] }}</td>
+      <td>{{ sex[i] }}</td>
+    </tr>
+    {%endfor%}
 </table>
-
-<p> {{ rows }} </p>

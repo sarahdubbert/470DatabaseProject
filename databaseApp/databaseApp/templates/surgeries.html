@@ -14,7 +14,12 @@
       <div class="actions"><input type=submit value="Add a New Surgery"></div>
   </form>
   </div>
-  
+
+  <div class="surgerySearch">
+      <form action="/surgeries" method=post>
+          <div class="actions"><button type=submit name="action" value="getAll">Return All Surgeries</button></div>
+      </form>
+  </div>
   
   <h3>Search for Surgery:</h3>
   
@@ -22,6 +27,6 @@
   <form action="/surgeries" method=post>
       Surgery Name <input type=text name=surgeryName></br>
       Surgery ID <input type=text name=surgeryID></br>
-      <div class="actions"><input type=submit value="Submit"></div>
+      <div class="actions"><button type=submit name="action" value="submit">Submit</button></div>
   </form>
   </div>

@@ -27,6 +27,12 @@
     </form>
 </div>
 
+<div class="petSearch">
+    <form action="/pet" method=post>
+        <div class="actions"><button type=submit name="action" value="getAll">Return All Pets</button></div>
+    </form>
+</div>
+
 
 <h3>Search for Pet:</h3>
 
@@ -40,8 +46,7 @@
     Pet DOB: <input type=text name=petDOB></br>
     Owner First Name: <input type=text name=ownerFirst></br>
     Owner Last Name: <input type=text name=ownerLast></br>
-    <!-- Pet ID <input type=text name=petID></br> -->
-    <div class="actions"><input type=submit value="Submit"></div>
+    <div class="actions"><button type=submit name="action" value="submit">Submit</button></div>
 </form>
 </div>
 

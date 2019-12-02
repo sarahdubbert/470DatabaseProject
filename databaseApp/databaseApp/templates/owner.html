@@ -26,8 +26,13 @@
       <div class="actions"><input type=submit value="Update Owner Information"></div>
   </form>
 </div>
-  
-  
+
+<div class="ownerSearch">
+    <form action="/owner" method=post>
+        <div class="actions"><button type=submit name="action" value="getAll">Return All Owners</button></div>
+    </form>
+</div>
+
   <h3>Search for Owner:</h3>
   
   <div class="ownerSearch">
@@ -39,8 +44,6 @@
       Phone Number: <input type=text name=phone></br>
       Email Address: <input type=text name=email></br>
       Physcial Address: <input type=text name=address></br>
-      <!-- Pet Name: <input type=text name=petName></br> -->
-      <!-- Pet ID: <input type=text name=petID></br> -->
       <div class="actions"><input type=submit value="Submit"></div>
   </form>
   </div>

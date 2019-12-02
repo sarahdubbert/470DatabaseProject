@@ -15,6 +15,11 @@
   </form>
   </div>
   
+  <div class="prescriptionSearch">
+      <form action="/prescriptions" method=post>
+          <div class="actions"><button type=submit name="action" value="getAll">Return All Prescriptions</button></div>
+      </form>
+  </div>
   
   <h3>Search for Prescription:</h3>
   
@@ -22,6 +27,6 @@
   <form action="/prescriptions" method=post>
       Prescription Name <input type=text name=prescriptionName></br>
       Prescription ID <input type=text name=prescriptionID></br>
-      <div class="actions"><input type=submit value="Submit"></div>
+      <div class="actions"><button type=submit name="action" value="submit">Submit</button></div>
   </form>
   </div>

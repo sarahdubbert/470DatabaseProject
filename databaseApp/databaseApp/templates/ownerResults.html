@@ -11,4 +11,31 @@
   <h3>Owner Search Results:</h3>
   </br>
   
-  <p>{{ rows }}</p>
+  <table style="width:100%" border="1px solid black">
+      <tr>
+        <th>Owner ID</th>
+        <th>Owner First Name</th>
+        <th>Owner Last Name</th>
+        <th>Insurance Number</th>
+        <th>Insurance Company</th>
+        <th>Phone Number</th>
+        <th>Email Address</th>
+        <th>Physical Address</th>
+        <th>SSN</th>
+        <th>DOB</th>
+      </tr>
+      {%for i in range(0, len)%}
+        <tr>
+          <td>{{ ids[i] }}</td>
+          <td>{{ fNames[i] }}</td>
+          <td>{{ lNames[i] }}</td>
+          <td>{{ insNums[i] }}</td>
+          <td>{{ insComps[i] }}</td>
+          <td>{{ phones[i] }}</td>
+          <td>{{ emails[i] }}</td>
+          <td>{{ addresses[i] }}</td>
+          <td>{{ ssns[i] }}</td>
+          <td>{{ dobs[i] }}</td>
+        </tr>
+        {%endfor%}
+    </table>
