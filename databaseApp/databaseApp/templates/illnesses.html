@@ -10,9 +10,15 @@
 
 <br/>
 <div class="addnew">
-  <form action="/newIllness" method=get>
-      <div class="actions"><input type=submit value="Add a New Illness"></div>
+  <form action="/diagnoseIllness" method=get>
+      <div class="actions"><input type=submit value="Add a Diagnosis"></div>
   </form>
+  </div>
+
+  <div class="illnessSearch">
+    <form action="/illnesses" method=post>
+        <div class="actions"><button type=submit name="action" value="getAllD">Return All Diagnoses</button></div>
+    </form>
   </div>
   
   <div class="illnessSearch">
@@ -28,5 +34,5 @@
       Illness Name <input type=text name=illnessName></br>
       Illness ID <input type=text name=illnessID></br>
       <div class="actions"><button type=submit name="action" value="submit">Submit</button></div>
-  </form>
-  </div>
+    </form>
+</div>

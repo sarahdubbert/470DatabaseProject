@@ -10,10 +10,17 @@
 
 <br/>
 <div class="addnew">
-  <form action="/newPrescription" method=get>
+  <form action="/prescribePet" method=get>
       <div class="actions"><input type=submit value="Add a New Prescription"></div>
   </form>
   </div>
+
+  <div class="prescriptionSearch">
+        <form action="/prescriptions" method=post>
+            <div class="actions"><button type=submit name="action" value="getAllP">Return All Pet Prescriptions</button></div>
+        </form>
+    </div>
+      
   
   <div class="prescriptionSearch">
       <form action="/prescriptions" method=post>

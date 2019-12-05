@@ -1,0 +1,70 @@
+<div class="btn-group">
+    <a href="/" class="btn btn-default" name = "home">Home</a>
+    <a href="/pet" class="btn btn-default" name = "pet">Pet</a>
+    <a href="/owner" class="btn btn-default" name = "owner">Owner</a>
+    <a href="/illnesses" class="btn btn-default" name = "illnesses">Illnesses</a>
+    <a href="/surgeries" class="btn btn-default" name = "surgeries">Surgeries</a>
+    <a href="/prescriptions" class="btn btn-default" name = "prescriptions">Prescriptions</a>
+    <a href="/vaccinations" class="btn btn-default" name = "vaccinations">Vaccinations</a>
+</div>
+</br>
+
+<h3>Add Diagnosis:</h3>
+<div class="diagnosis">
+    <form action="/diagnoseIllness" method=post onchange=changeOwner()>
+            Select Owner of Pet to Diagnose: <select id="ownerSB">
+            <option selected value> -- select an option -- </option>
+            {%for i in range(0, nLen)%}
+            <option value="{{ names[i] }}">{{ names[i] }}</option>
+            {%endfor%}
+        </select>
+        <div class="actions"><button type=submit name="action" value="load">Load Pets for this Owner</button></div>
+        <input type=hidden id=ownerTB name=owner></br>
+
+            Select Pet to Diagnose: <select id="petSB" onchange=changePet()>
+            <option selected value> -- select an option -- </option>
+            {%for i in range(0, pLen)%}
+            <option value="{{ pNames[i] }}">{{ pNames[i] }}</option>
+            {%endfor%}
+        </select>
+        <input type=hidden id=petTB name=pet></br>
+
+            Select Illness: <select id="illnessSB" onchange=changeIllness()>
+            <option selected value> -- select an option -- </option>
+            {%for i in range(0, iLen)%}
+            <option value="{{ illnesses[i] }}">{{ illnesses[i] }}</option>
+            {%endfor%}
+        </select></br>
+        Date of Diagnosis: <input type=text name=date></br>
+        <div class="actions"><button type=submit name="action" value="submit">Submit</button></div>
+        <input type=hidden id=illnessTB name=illness></br>
+    </form>
+</div>
+
+<script> 
+    function changeOwner() {
+        var selectBox = document.getElementById("ownerSB");
+        var selected = selectBox.options[selectBox.selectedIndex].value;
+        document.getElementById('ownerTB').value = selected;
+        return selected;
+    };
+</script>
+
+<script> 
+    function changePet() {
+        var selectBox = document.getElementById("petSB");
+        var selected = selectBox.options[selectBox.selectedIndex].value;
+        document.getElementById('petTB').value = selected;
+        document.getElementByID('ownerTB').value = ownerID;
+        return selected;
+    };
+</script>
+
+<script> 
+    function changeIllness() {
+        var selectBox = document.getElementById("illnessSB");
+        var selected = selectBox.options[selectBox.selectedIndex].value;
+        document.getElementById('illnessTB').value = selected;
+        return selected;
+    };
+</script>

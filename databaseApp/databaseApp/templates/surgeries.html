@@ -10,11 +10,17 @@
 
 <br/>
 <div class="addnew">
-  <form action="/newSurgery" method=get>
+  <form action="/scheduleSurgery" method=get>
       <div class="actions"><input type=submit value="Add a New Surgery"></div>
   </form>
   </div>
 
+  <div class="surgerySearch">
+        <form action="/surgeries" method=post>
+            <div class="actions"><button type=submit name="action" value="getAllS">Return All Scheduled Surgeries</button></div>
+        </form>
+    </div>
+      
   <div class="surgerySearch">
       <form action="/surgeries" method=post>
           <div class="actions"><button type=submit name="action" value="getAll">Return All Surgeries</button></div>

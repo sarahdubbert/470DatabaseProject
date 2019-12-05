@@ -80,9 +80,6 @@ def pet():
 
         return render_template('petResults.html', ids=ids, pNames=pNames, fNames=fNames, lNames=lNames, types=types, dobs=dobs, weights=weights, heights=heights, sex=sex, len=len(ids))
 
-    cursor.close()
-    cnx.close()
-
     return render_template('pet.html')
 
 @app.route('/petResults', methods=['GET', 'POST'])
@@ -96,22 +93,36 @@ def newPet():
     cnx = mysql.connector.connect(user=usr, password=pw, host=hst, database=db, use_pure=True)
     cursor = cnx.cursor()
     if request.method == "POST":
-        print('owner')
-        owner = request.form['owner']
-        print(owner)
-        # def getOwner():       
-            # return(owner)
+        
+        def getOwner(): 
+            owner = request.form['owner']      
+            name = owner.split()
+            firstName = name[0]
+            lastName = name[1]
+            print(firstName + ' ' + lastName)
+            ownerIDQuery = "SELECT OwnerID FROM Owner WHERE FirstName = '" + str(firstName) + "' AND LastName = '" + str(lastName) + "';"
+            try:
+                for result in cursor.execute(ownerIDQuery, multi = True) :
+                    if result.with_rows:
+                        print("Rows produced by statement '{}':".format(result.statement))
+                        results = result.fetchall()
+                        for r in results:
+                            return r[0]
+                    else:
+                        print("Number of rows affected by statement '{}': {}".format(result.statement, result.rowcount))
+            except:
+                print("Exception")
+        
         #how to get FK for ownerId?
         pet_name=request.form['pet_name']
-        owner_id=session['owner_id']
+        owner_id=getOwner()
         pet_type=request.form['pet_type']
         pet_dob=request.form['pet_dob']
         weight=request.form['weight']
         height=request.form['height']
         sex=request.form['sex']
-        # print(getOwner())
         def get_insertPet_query(): 
-            return "INSERT INTO Pet (Name, OwnerID, PetType, DOB, Weight, Height, Sex) VALUES ('" + str(pet_name) + "', '" + owner_id + "', '" + str(pet_type) + "', '" + str(pet_dob) + "', '" + str(weight) + "', '" + str(height) + "', '" + str(sex) + "');"
+            return "INSERT INTO Pet (Name, OwnerID, PetType, DOB, Weight, Height, Sex) VALUES ('" + str(pet_name) + "', '" + str(owner_id) + "', '" + str(pet_type) + "', '" + str(pet_dob) + "', '" + str(weight) + "', '" + str(height) + "', '" + str(sex) + "');"
 
         newPetQuery = get_insertPet_query()
         cursor.execute(get_insertPet_query())
@@ -139,6 +150,9 @@ def newPet():
                 print("Number of rows affected by statement '{}': {}".format(result.statement, result.rowcount))
     except:
         print("Exception")
+
+    cnx.close()
+    cursor.close()
 
     return render_template('newPet.html', names=names, len=len(names))
 
@@ -296,7 +310,7 @@ def newOwner():
         session['owner_id'] = str(ownerID)
         print("session: " + session['owner_id'])
 
-        return redirect(url_for('newPet'))
+        return redirect(url_for('owner'))
 
     return render_template('newOwner.html')
 
@@ -350,7 +364,7 @@ def updateOwner():
 
             cursor.execute(set_ownerInfo_query())
             cnx.commit()
-        
+    
     cursor.close()
     cnx.close()
     
@@ -366,6 +380,28 @@ def illnesses():
         if button == "getAll":
             def get_illnessResults_query():
                 return "SELECT IllnessID, IllnessName FROM Illness;"
+        elif button == "getAllD":
+            def get_diagnoses_query():
+                return "SELECT * FROM isDiagnosedWith;"
+            illnesses = []
+            pets = []
+            dates = []
+            try:
+                for result in cursor.execute(get_diagnoses_query(), multi = True) :
+                    if result.with_rows:
+                        print("Rows produced by statement '{}':".format(result.statement))
+                        results = result.fetchall()
+                        for r in results:
+                            illnesses.append(r[0])
+                            pets.append(r[1])
+                            dates.append(r[2])
+                    else:
+                        print("Number of rows affected by statement '{}': {}".format(result.statement, result.rowcount))
+            except:
+                print("Exception")
+
+            return render_template('diagnoses.html', iIds=illnesses, pIds=pets, dates=dates, len=len(illnesses))
+
         elif button == "submit":
             def get_illnessResults_query():
                 return "SELECT IllnessID, IllnessName FROM Illness WHERE IllnessID = '" + str(illnessID) + "' OR IllnessName = '" + str(illnessName) + "';"
@@ -393,27 +429,141 @@ def illnesses():
 
         return render_template('illnessResults.html', ids=ids, names=names, len=len(ids))
 
+    return render_template('illnesses.html')
+
+@app.route('/diagnoseIllness', methods=['GET', 'POST'])
+def diagnoseIllness():
+    cnx = mysql.connector.connect(user=usr, password=pw, host=hst, database=db, use_pure=True)
+    cursor = cnx.cursor()
+    pNames = []
+    if request.method == "POST":
+        button = request.form['action']
+        print(button)
+
+        def getOwner(): 
+            owner = request.form['owner']   
+            name = owner.split()
+            firstName = name[0]
+            lastName = name[1]
+            print(firstName + ' ' + lastName)
+            ownerIDQuery = "SELECT OwnerID FROM Owner WHERE FirstName = '" + str(firstName) + "' AND LastName = '" + str(lastName) + "';"
+            try:
+                for result in cursor.execute(ownerIDQuery, multi = True) :
+                    if result.with_rows:
+                        print("Rows produced by statement '{}':".format(result.statement))
+                        results = result.fetchall()
+                        for r in results:
+                            return r[0]
+                    else:
+                        print("Number of rows affected by statement '{}': {}".format(result.statement, result.rowcount))
+            except:
+                print("Exception")
+        
+        ownerID = getOwner()
+
+        def getPets():
+            return "SELECT Name FROM Pet WHERE OwnerID = '" + str(ownerID) + "';"
+        
+        petResultsQuery = getPets()
+        print("Pets Results Query: " + petResultsQuery)
+
+        cnx.commit()
+
+        try:
+            for result in cursor.execute(petResultsQuery, multi = True) :
+                if result.with_rows:
+                    print("Rows produced by statement '{}':".format(result.statement))
+                    results = result.fetchall()
+                    for r in results:
+                        pNames.append(r[0])
+                else:
+                    print("Number of rows affected by statement '{}': {}".format(result.statement, result.rowcount))
+        except:
+            print("Exception")
+        
+        if button == "submit":
+            pet = request.form['pet']
+            illness = request.form['illness']
+
+            illnessIDQuery = "SELECT IllnessID FROM Illness WHERE IllnessName = '" + str(illness) + "';"
+            petIDQuery = "SELECT PetID FROM Pet WHERE Name = '" + str(pet) + "' AND OwnerID = '" + str(ownerID) + "';"
+
+            try:
+                for result in cursor.execute(illnessIDQuery, multi = True) :
+                    if result.with_rows:
+                        print("Rows produced by statement '{}':".format(result.statement))
+                        results = result.fetchall()
+                        for r in results:
+                            illnessID = r[0]
+                    else:
+                        print("Number of rows affected by statement '{}': {}".format(result.statement, result.rowcount))
+            except:
+                print("Exception")
+
+            try:
+                for result in cursor.execute(petIDQuery, multi = True) :
+                    if result.with_rows:
+                        print("Rows produced by statement '{}':".format(result.statement))
+                        results = result.fetchall()
+                        for r in results:
+                            petID = r[0]
+                    else:
+                        print("Number of rows affected by statement '{}': {}".format(result.statement, result.rowcount))
+            except:
+                print("Exception")
+
+            date = request.form['date']
+            addDiagnosisQuery = "INSERT INTO isDiagnosedWith (IllnessID, PetID, IllnessDate) VALUES ('" + str(illnessID) + "', '" + str(petID) + "', '" + str(date) + "');" 
+            print(addDiagnosisQuery)
+            cursor.execute(addDiagnosisQuery)
+            cnx.commit()
+
+    def getOwners():
+        return "SELECT FirstName, LastName FROM Owner;"
+    
+    ownerResultsQuery = getOwners()
+    print("Owner Results Query: " + ownerResultsQuery)
+
+    cnx.commit()
+    names = []
+
+    try:
+        for result in cursor.execute(ownerResultsQuery, multi = True) :
+            if result.with_rows:
+                print("Rows produced by statement '{}':".format(result.statement))
+                results = result.fetchall()
+                for r in results:
+                    names.append(r[0] + ' ' + r[1])
+            else:
+                print("Number of rows affected by statement '{}': {}".format(result.statement, result.rowcount))
+    except:
+        print("Exception")
+
+    def getIllnesses():
+        return "SELECT IllnessName FROM Illness;"
+    
+    illnessResultsQuery = getIllnesses()
+    print("Illness Results Query: " + ownerResultsQuery)
+
+    cnx.commit()
+    illnesses = []
+
+    try:
+        for result in cursor.execute(illnessResultsQuery, multi = True) :
+            if result.with_rows:
+                print("Rows produced by statement '{}':".format(result.statement))
+                results = result.fetchall()
+                for r in results:
+                    illnesses.append(r[0])
+            else:
+                print("Number of rows affected by statement '{}': {}".format(result.statement, result.rowcount))
+    except:
+        print("Exception")
+
     cursor.close()
     cnx.close()
 
-    return render_template('illnesses.html')
-
-@app.route('/newIllness', methods=['GET', 'POST'])
-def newIllness():
-    cnx = mysql.connector.connect(user=usr, password=pw, host=hst, database=db, use_pure=True)
-    cursor = cnx.cursor()
-    if request.method == "POST":
-        pet_id=request.form['pet_id']
-        illness_id=request.form['illness_id']
-        illness_date=request.form['illness_date']
-
-        def get_insertIllness_query():
-            return "INSERT INTO isDiagnosedWith (IllnessID, PetID, IllnessDate) VALUES ('" + str(illness_id) + "', '" + str(pet_id) + "', '" + str(illness_date) + "');"
-
-        cursor.execute(get_insertIllness_query())
-        cnx.commit()
-
-    return render_template('newIllness.html')
+    return render_template('diagnoseIllness.html', names=names, nLen=len(names), pNames=pNames, pLen=len(pNames), illnesses=illnesses, iLen=len(illnesses))
 
 @app.route('/illnessResults', methods=['GET', 'POST'])
 def illnessResults():
@@ -431,6 +581,28 @@ def surgeries():
         if button == "getAll":
             def get_surgeryResults_query():
                 return "SELECT SurgeryID, SurgeryName FROM Surgery;"
+        elif button == "getAllS":
+            def get_surgeries_query():
+                return "SELECT * FROM isTreatedWith;"
+            surgeries = []
+            pets = []
+            dates = []
+            try:
+                for result in cursor.execute(get_surgeries_query(), multi = True) :
+                    if result.with_rows:
+                        print("Rows produced by statement '{}':".format(result.statement))
+                        results = result.fetchall()
+                        for r in results:
+                            surgeries.append(r[0])
+                            pets.append(r[1])
+                            dates.append(r[2])
+                    else:
+                        print("Number of rows affected by statement '{}': {}".format(result.statement, result.rowcount))
+            except:
+                print("Exception")
+
+            return render_template('scheduledSurgeries.html', sIds=surgeries, pIds=pets, dates=dates, len=len(surgeries))
+
         elif button == "submit":
             def get_surgeryResults_query():
                 return "SELECT SurgeryID, SurgeryName FROM Surgery WHERE SurgeryID = '" + str(surgeryID) + "' OR SurgeryName = '" + str(surgeryName) + "';"
@@ -480,6 +652,142 @@ def newSurgery():
 
     return render_template('newSurgery.html')
 
+@app.route('/scheduleSurgery', methods=['GET', 'POST'])
+def scheduleSurgery():
+    cnx = mysql.connector.connect(user=usr, password=pw, host=hst, database=db, use_pure=True)
+    cursor = cnx.cursor()
+    pNames = []
+    if request.method == "POST":
+        button = request.form['action']
+        print(button)
+
+        def getOwner(): 
+            owner = request.form['owner']   
+            name = owner.split()
+            firstName = name[0]
+            lastName = name[1]
+            print(firstName + ' ' + lastName)
+            ownerIDQuery = "SELECT OwnerID FROM Owner WHERE FirstName = '" + str(firstName) + "' AND LastName = '" + str(lastName) + "';"
+            try:
+                for result in cursor.execute(ownerIDQuery, multi = True) :
+                    if result.with_rows:
+                        print("Rows produced by statement '{}':".format(result.statement))
+                        results = result.fetchall()
+                        for r in results:
+                            return r[0]
+                    else:
+                        print("Number of rows affected by statement '{}': {}".format(result.statement, result.rowcount))
+            except:
+                print("Exception")
+        
+        ownerID = getOwner()
+
+        def getPets():
+            return "SELECT Name FROM Pet WHERE OwnerID = '" + str(ownerID) + "';"
+        
+        petResultsQuery = getPets()
+        print("Pets Results Query: " + petResultsQuery)
+
+        cnx.commit()
+
+        try:
+            for result in cursor.execute(petResultsQuery, multi = True) :
+                if result.with_rows:
+                    print("Rows produced by statement '{}':".format(result.statement))
+                    results = result.fetchall()
+                    for r in results:
+                        pNames.append(r[0])
+                else:
+                    print("Number of rows affected by statement '{}': {}".format(result.statement, result.rowcount))
+        except:
+            print("Exception")
+        
+        if button == "submit":
+            pet = request.form['pet']
+            surgery = request.form['surgery']
+            print("Surgery " + surgery)
+
+            surgeryIDQuery = "SELECT SurgeryID FROM Surgery WHERE SurgeryName = '" + str(surgery) + "';"
+            print(surgeryIDQuery)
+            petIDQuery = "SELECT PetID FROM Pet WHERE Name = '" + str(pet) + "' AND OwnerID = '" + str(ownerID) + "';"
+
+            try:
+                for result in cursor.execute(surgeryIDQuery, multi = True) :
+                    if result.with_rows:
+                        print("Rows produced by statement '{}':".format(result.statement))
+                        results = result.fetchall()
+                        for r in results:
+                            surgeryID = r[0]
+                    else:
+                        print("Number of rows affected by statement '{}': {}".format(result.statement, result.rowcount))
+            except:
+                print("Exception")
+
+            try:
+                for result in cursor.execute(petIDQuery, multi = True) :
+                    if result.with_rows:
+                        print("Rows produced by statement '{}':".format(result.statement))
+                        results = result.fetchall()
+                        for r in results:
+                            petID = r[0]
+                    else:
+                        print("Number of rows affected by statement '{}': {}".format(result.statement, result.rowcount))
+            except:
+                print("Exception")
+
+            date = request.form['date']
+            addSurgeryQuery = "INSERT INTO isTreatedWith (SurgeryID, PetID, SurgeryDate) VALUES ('" + str(surgeryID) + "', '" + str(petID) + "', '" + str(date) + "');" 
+            print(addSurgeryQuery)
+            cursor.execute(addSurgeryQuery)
+            cnx.commit()
+
+    def getOwners():
+        return "SELECT FirstName, LastName FROM Owner;"
+    
+    ownerResultsQuery = getOwners()
+    print("Owner Results Query: " + ownerResultsQuery)
+
+    cnx.commit()
+    names = []
+
+    try:
+        for result in cursor.execute(ownerResultsQuery, multi = True) :
+            if result.with_rows:
+                print("Rows produced by statement '{}':".format(result.statement))
+                results = result.fetchall()
+                for r in results:
+                    names.append(r[0] + ' ' + r[1])
+            else:
+                print("Number of rows affected by statement '{}': {}".format(result.statement, result.rowcount))
+    except:
+        print("Exception")
+
+    def getSurgery():
+        return "SELECT SurgeryName FROM Surgery;"
+    
+    surgeryResultsQuery = getSurgery()
+    print("Surgery Results Query: " + surgeryResultsQuery)
+
+    cnx.commit()
+    surgeries = []
+
+    try:
+        for result in cursor.execute(surgeryResultsQuery, multi = True) :
+            if result.with_rows:
+                print("Rows produced by statement '{}':".format(result.statement))
+                results = result.fetchall()
+                for r in results:
+                    surgeries.append(r[0])
+            else:
+                print("Number of rows affected by statement '{}': {}".format(result.statement, result.rowcount))
+    except:
+        print("Exception")
+
+    cursor.close()
+    cnx.close()
+
+    return render_template('scheduleSurgery.html', names=names, nLen=len(names), pNames=pNames, pLen=len(pNames), surgery=surgeries, sLen=len(surgeries))
+
 @app.route('/surgeryResults', methods=['GET', 'POST'])
 def surgeryResults():
     if request.method == "POST":
@@ -496,6 +804,28 @@ def prescriptions():
         if button == "getAll":
             def get_prescriptionResults_query():
                 return "SELECT PrescriptionID, PrescriptionName FROM Prescription;"
+        elif button == "getAllP":
+            def get_prescriptions_query():
+                return "SELECT PrescriptionID, PetID, DatePrescribed FROM isPrescribed;"
+            prescriptions = []
+            pets = []
+            dates = []
+            try:
+                for result in cursor.execute(get_prescriptions_query(), multi = True) :
+                    if result.with_rows:
+                        print("Rows produced by statement '{}':".format(result.statement))
+                        results = result.fetchall()
+                        for r in results:
+                            prescriptions.append(r[0])
+                            pets.append(r[1])
+                            dates.append(r[2])
+                    else:
+                        print("Number of rows affected by statement '{}': {}".format(result.statement, result.rowcount))
+            except:
+                print("Exception")
+
+            return render_template('prescribedPets.html', prIds=prescriptions, pIds=pets, dates=dates, len=len(prescriptions))
+
         elif button == "submit":
             def get_prescriptionResults_query():
                 return "SELECT PrescriptionID, PrescriptionName FROM Prescription WHERE PrescriptionID = '" + str(prescriptionID) + "' OR PrescriptionName = '" + str(prescriptionName) + "';"
@@ -527,6 +857,143 @@ def prescriptions():
     cnx.close()
 
     return render_template('prescriptions.html')
+
+@app.route('/prescribePet', methods=['GET', 'POST'])
+def prescribePet():
+    cnx = mysql.connector.connect(user=usr, password=pw, host=hst, database=db, use_pure=True)
+    cursor = cnx.cursor()
+    pNames = []
+    if request.method == "POST":
+        button = request.form['action']
+        print(button)
+
+        def getOwner(): 
+            owner = request.form['owner']   
+            name = owner.split()
+            firstName = name[0]
+            lastName = name[1]
+            print(firstName + ' ' + lastName)
+            ownerIDQuery = "SELECT OwnerID FROM Owner WHERE FirstName = '" + str(firstName) + "' AND LastName = '" + str(lastName) + "';"
+            try:
+                for result in cursor.execute(ownerIDQuery, multi = True) :
+                    if result.with_rows:
+                        print("Rows produced by statement '{}':".format(result.statement))
+                        results = result.fetchall()
+                        for r in results:
+                            return r[0]
+                    else:
+                        print("Number of rows affected by statement '{}': {}".format(result.statement, result.rowcount))
+            except:
+                print("Exception")
+        
+        ownerID = getOwner()
+
+        def getPets():
+            return "SELECT Name FROM Pet WHERE OwnerID = '" + str(ownerID) + "';"
+        
+        petResultsQuery = getPets()
+        print("Pets Results Query: " + petResultsQuery)
+
+        cnx.commit()
+
+        try:
+            for result in cursor.execute(petResultsQuery, multi = True) :
+                if result.with_rows:
+                    print("Rows produced by statement '{}':".format(result.statement))
+                    results = result.fetchall()
+                    for r in results:
+                        pNames.append(r[0])
+                else:
+                    print("Number of rows affected by statement '{}': {}".format(result.statement, result.rowcount))
+        except:
+            print("Exception")
+        
+        if button == "submit":
+            pet = request.form['pet']
+            prescription = request.form['prescription']
+            print("Prescription " + prescription)
+
+            prescriptionIDQuery = "SELECT PrescriptionID FROM Prescription WHERE PrescriptionName = '" + str(prescription) + "';"
+            print(prescriptionIDQuery)
+            petIDQuery = "SELECT PetID FROM Pet WHERE Name = '" + str(pet) + "' AND OwnerID = '" + str(ownerID) + "';"
+
+            try:
+                for result in cursor.execute(prescriptionIDQuery, multi = True) :
+                    if result.with_rows:
+                        print("Rows produced by statement '{}':".format(result.statement))
+                        results = result.fetchall()
+                        for r in results:
+                            prescriptionID = r[0]
+                    else:
+                        print("Number of rows affected by statement '{}': {}".format(result.statement, result.rowcount))
+            except:
+                print("Exception")
+
+            try:
+                for result in cursor.execute(petIDQuery, multi = True) :
+                    if result.with_rows:
+                        print("Rows produced by statement '{}':".format(result.statement))
+                        results = result.fetchall()
+                        for r in results:
+                            petID = r[0]
+                    else:
+                        print("Number of rows affected by statement '{}': {}".format(result.statement, result.rowcount))
+            except:
+                print("Exception")
+
+            date = request.form['date']
+            addPrescriptionQuery = "INSERT INTO isPrescribed (PrescriptionID, PetID, DatePrescribed) VALUES ('" + str(prescriptionID) + "', '" + str(petID) + "', '" + str(date) + "');" 
+            print(addPrescriptionQuery)
+            cursor.execute(addPrescriptionQuery)
+            cnx.commit()
+
+    def getOwners():
+        return "SELECT FirstName, LastName FROM Owner;"
+    
+    ownerResultsQuery = getOwners()
+    print("Owner Results Query: " + ownerResultsQuery)
+
+    cnx.commit()
+    names = []
+
+    try:
+        for result in cursor.execute(ownerResultsQuery, multi = True) :
+            if result.with_rows:
+                print("Rows produced by statement '{}':".format(result.statement))
+                results = result.fetchall()
+                for r in results:
+                    names.append(r[0] + ' ' + r[1])
+            else:
+                print("Number of rows affected by statement '{}': {}".format(result.statement, result.rowcount))
+    except:
+        print("Exception")
+
+    def getPrescription():
+        return "SELECT PrescriptionName FROM Prescription;"
+    
+    prescriptionResultsQuery = getPrescription()
+    print("Prescription Results Query: " + prescriptionResultsQuery)
+
+    cnx.commit()
+    prescriptions = []
+
+    try:
+        for result in cursor.execute(prescriptionResultsQuery, multi = True) :
+            if result.with_rows:
+                print("Rows produced by statement '{}':".format(result.statement))
+                results = result.fetchall()
+                for r in results:
+                    prescriptions.append(r[0])
+            else:
+                print("Number of rows affected by statement '{}': {}".format(result.statement, result.rowcount))
+    except:
+        print("Exception")
+
+    cursor.close()
+    cnx.close()
+
+    return render_template('prescribePet.html', names=names, nLen=len(names), pNames=pNames, pLen=len(pNames), prescription=prescriptions, prLen=len(prescriptions))
+
 
 @app.route('/newPrescription', methods=['GET', 'POST'])
 def newPrescription():

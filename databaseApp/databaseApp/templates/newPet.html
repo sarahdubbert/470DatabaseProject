@@ -13,6 +13,7 @@
 <div class="new_pet">
   <form action="/newPet" method=post onchange=change()>
       <select id="ownerSB">
+          <option selected value> -- select an option -- </option>
         {%for i in range(0, len)%}
           <option value="{{ names[i] }}">{{ names[i] }}</option>
         {%endfor%}
@@ -41,7 +42,7 @@
     var selectBox = document.getElementById("ownerSB");
     var selected = selectBox.options[selectBox.selectedIndex].value;
     document.getElementById('ownerTB').value = selected;
-    alert(selected);
+    alert(owner.value)
     return selected;
   };
 </script>
