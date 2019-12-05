@@ -142,9 +142,3 @@ ALTER TABLE Treatment ADD FOREIGN KEY (IllnessID) REFERENCES Illness(IllnessID);
 
 SELECT Name, DOB, Weight, Height FROM Pet WHERE PetID = '1';
 
-
-
-
-
-
-
