@@ -9,6 +9,17 @@
 </div>
 <br/>
 
+<h2>Choose Owner for New Pet</h2>
+<div class="new_pet">
+  <form action="/newPet" method=post onchange=change()>
+      <select id="ownerSB">
+        {%for i in range(0, len)%}
+          <option value="{{ names[i] }}">{{ names[i] }}</option>
+        {%endfor%}
+      </select>
+  </form>
+</div>
+
 <h2>New Pet Information</h2>
 
 <div class="new_pet">
@@ -19,6 +30,18 @@
     Weight: <input type=text name=weight></br>
     Height: <input type=text name=height></br>
     Sex: <input type=text name=sex></br>
-    <div class="actions"><input type=submit value="Submit"></div>
+    <div class="actions"><button type=submit name="action" value="submit">Submit</button></div>
+    <input type=hidden id=ownerTB name=owner></br>
+
 </form>
 </div>
+
+<script> 
+  function change() {
+    var selectBox = document.getElementById("ownerSB");
+    var selected = selectBox.options[selectBox.selectedIndex].value;
+    document.getElementById('ownerTB').value = selected;
+    alert(selected);
+    return selected;
+  };
+</script>

@@ -32,7 +32,7 @@ def pet():
             def get_petResults_query():
                 return "SELECT Pet.PetID, Pet.Name, Owner.FirstName, Owner.LastName, Pet.PetType, Pet.DOB, Pet.Weight, Pet.Height, Pet.Sex FROM Pet JOIN Owner ON Pet.OwnerID = Owner.OwnerID;"
         elif button == "submit":
-            def get_petResults_query(petName, petType, petWeight, petHeight, petSex, petDOB, ownerFirst, ownerLast):
+            def get_petResults_query():
                 return "SELECT Pet.PetID, Pet.Name, Owner.FirstName, Owner.LastName, Pet.PetType, Pet.DOB, Pet.Weight, Pet.Height, Pet.Sex FROM Pet JOIN Owner ON Pet.OwnerID = Owner.OwnerID WHERE Name = '" + str(petName) + "' OR PetType = '" + str(petType) + "' OR Weight = '" + str(petWeight) + "' OR Height = '" + str(petHeight) + "' OR Sex = '" + str(petSex) + "' OR Pet.DOB = '" + str(petDOB) + "' OR FirstName = '" + str(ownerFirst) + "' OR LastName = '" +str(ownerLast) + "';"
             
             petName=request.form['petName']
@@ -96,6 +96,11 @@ def newPet():
     cnx = mysql.connector.connect(user=usr, password=pw, host=hst, database=db, use_pure=True)
     cursor = cnx.cursor()
     if request.method == "POST":
+        print('owner')
+        owner = request.form['owner']
+        print(owner)
+        # def getOwner():       
+            # return(owner)
         #how to get FK for ownerId?
         pet_name=request.form['pet_name']
         owner_id=session['owner_id']
@@ -104,7 +109,7 @@ def newPet():
         weight=request.form['weight']
         height=request.form['height']
         sex=request.form['sex']
-
+        # print(getOwner())
         def get_insertPet_query(): 
             return "INSERT INTO Pet (Name, OwnerID, PetType, DOB, Weight, Height, Sex) VALUES ('" + str(pet_name) + "', '" + owner_id + "', '" + str(pet_type) + "', '" + str(pet_dob) + "', '" + str(weight) + "', '" + str(height) + "', '" + str(sex) + "');"
 
@@ -114,7 +119,28 @@ def newPet():
 
         return redirect(url_for('pet'))
     
-    return render_template('newPet.html')
+    def getOwners():
+        return "SELECT FirstName, LastName FROM Owner;"
+    
+    ownerResultsQuery = getOwners()
+    print("Owner Results Query: " + ownerResultsQuery)
+
+    cnx.commit()
+    names = []
+
+    try:
+        for result in cursor.execute(ownerResultsQuery, multi = True) :
+            if result.with_rows:
+                print("Rows produced by statement '{}':".format(result.statement))
+                results = result.fetchall()
+                for r in results:
+                    names.append(r[0] + ' ' + r[1])
+            else:
+                print("Number of rows affected by statement '{}': {}".format(result.statement, result.rowcount))
+    except:
+        print("Exception")
+
+    return render_template('newPet.html', names=names, len=len(names))
 
 @app.route('/updatePet', methods=['GET', 'POST'])
 def updatePet():
