@@ -1,12 +1,66 @@
 <div class="btn-group">
-        <a href="/" class="btn btn-default" name = "home">Home</a>
-        <a href="/pet" class="btn btn-default" name = "pet">Pet</a>
-        <a href="/owner" class="btn btn-default" name = "owner">Owner</a>
-        <a href="/illnesses" class="btn btn-default" name = "illnesses">Illnesses</a>
-        <a href="/surgeries" class="btn btn-default" name = "surgeries">Surgeries</a>
-        <a href="/prescriptions" class="btn btn-default" name = "prescriptions">Prescriptions</a>
-        <a href="/vaccinations" class="btn btn-default" name = "vaccinations">Vaccinations</a>
-    </div>
+    <ul>
+      <li><a href="/" class="btn btn-default" name = "home">Home</a></li>
+      <li><a href="/pet" class="btn btn-default" name = "pet">Pet</a></li>
+      <li><a href="/owner" class="btn btn-default" name = "owner">Owner</a></li>
+      <li><a href="/illnesses" class="btn btn-default" name = "illnesses">Illnesses</a></li>
+      <li><a href="/surgeries" class="btn btn-default" name = "surgeries">Surgeries</a></li>
+      <li><a href="/prescriptions" class="btn btn-default" name = "prescriptions">Prescriptions</a></li>
+      <li><a href="/vaccinations" class="btn btn-default" name = "vaccinations">Vaccinations</a></li>
+    </ul>
+  </div>
+  
+  <style>
+    html {
+      font-family: "Arial"
+    }
+    ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #333;
+    }
+  
+    li {
+      float: left;
+    }
+  
+    li a {
+      display: block;
+      color: white;
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+    }
+  
+      /* Change the link color to #111 (black) on hover */
+    li a:hover {
+      background-color: #111;
+    }
+
+    table {
+      border-collapse: collapse;
+    }
+    
+    tr:nth-child(even) {
+      background-color: #afafaf;
+    }
+
+    th {
+      height: 50px;
+    }
+
+    th, td {
+      padding: 15px;
+      border-bottom: 1px solid rgb(221, 221, 221);
+    }
+
+    table, th, td {
+      border: 1px solid black;
+    }
+  </style>
+
     </br>
     
     <h3>Schedule Surgery:</h3>
