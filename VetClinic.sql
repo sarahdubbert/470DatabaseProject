@@ -140,7 +140,7 @@ ALTER TABLE isTreatedWith ADD FOREIGN KEY (PetID) REFERENCES Pet(PetID);
 
 ALTER TABLE Treatment ADD FOREIGN KEY (IllnessID) REFERENCES Illness(IllnessID);
 
-
+SELECT Name, DOB, Weight, Height FROM Pet WHERE PetID = '1';
 
 
 
