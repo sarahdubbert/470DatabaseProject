@@ -142,9 +142,3 @@ ALTER TABLE Treatment ADD FOREIGN KEY (IllnessID) REFERENCES Illness(IllnessID);
 
 
 
-
-
-
-
-
-

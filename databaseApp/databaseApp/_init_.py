@@ -270,7 +270,7 @@ def newOwner():
         session['owner_id'] = str(ownerID)
         print("session: " + session['owner_id'])
 
-        return redirect(url_for('owner'))
+        return redirect(url_for('newPet'))
 
     return render_template('newOwner.html')
 
